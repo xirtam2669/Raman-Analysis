@@ -12,8 +12,16 @@ namespace Raman
     internal class CurveFit
     {
 
-        double baseline = new Func<double, double, double>
+        Func<double, double, double, double> gaussian = new Func<double, double, double, double>((σ, μ, x) =>
+        {
+            return Normal.PDF(μ, σ, x);
+        });
 
-        var f = new Func<double, double, double, double(())>
+        public double curvefit(double[] x, double[] y, Func<double, double, double, double> objective, double initialGuess_σ, double initialGuess_μ)
+        {
+            Fit.Curve(x, y, objective, initialGuess_σ, initialGuess_μ);
+            return 0;
+        }
+        
     }
 }
