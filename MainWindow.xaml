@@ -26,9 +26,9 @@
             </Menu>
         </DockPanel>
 
-        <StackPanel Margin="10" Grid.Column="0" Orientation="Horizontal">
+        <StackPanel Margin="30, 10, 0, 0" Grid.Column="0" Orientation="Horizontal">
             <StackPanel
-                        Margin="0,30"
+                        Margin="0,30, 0, 0"
                         Orientation="Vertical">
                 <TextBlock>Raman Shift</TextBlock>
                 <ListBox Width="80"
@@ -46,7 +46,7 @@
                 </ListBox>
             </StackPanel>
 
-            <StackPanel Margin="0, 30" Orientation="Vertical">
+            <StackPanel Margin="0, 30, 0, 0" Orientation="Vertical">
                 <TextBlock>Dark Subtracted</TextBlock>
                 <ListBox Width="80"
                          Height="700"
@@ -66,7 +66,7 @@
 
         <WpfPlot Name="plot"
                  Grid.Column="1" 
-                 Margin="0, 30"/>
+                 Margin="0, 30, 0, 0"/>
 
     </Grid>
 </Window>

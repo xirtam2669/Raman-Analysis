@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-
+using ScottPlot;
+using MathNet;
 
 
 namespace Raman
@@ -38,7 +39,10 @@ namespace Raman
                 double[] x_coords = Array.ConvertAll(array, double.Parse);
                 double[] y_coords = Array.ConvertAll(array2, double.Parse);
 
+                plot.Plot.AddScatter(x_coords, y_coords);
+                plot.Refresh();
 
+                    
 
 
             }
