@@ -1,0 +1,72 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Raman"
+        xmlns:System="clr-namespace:System;assembly=System.Runtime"
+        x:Class="Raman.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="450"
+        Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230" />
+            <ColumnDefinition Width="1000"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Background="DarkRed">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">Start</MenuItem>
+                <MenuItem Header="Debug">
+                    <MenuItem Header="Test CSV"
+                              Click="TestCsvOnClick"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <StackPanel Margin="10" Grid.Column="0" Orientation="Horizontal">
+            <StackPanel
+                        Margin="0,30"
+                        Orientation="Vertical">
+                <TextBlock>Raman Shift</TextBlock>
+                <ListBox Width="80"
+                         Height="700"
+                         Name="x"
+                         HorizontalAlignment="Left">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding}">
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+
+            <StackPanel Margin="0, 30" Orientation="Vertical">
+                <TextBlock>Dark Subtracted</TextBlock>
+                <ListBox Width="80"
+                         Height="700"
+                         Name="y"
+                         HorizontalAlignment="Left">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding}">
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </StackPanel>
+
+        <WpfPlot Name="plot"
+                 Grid.Column="1" 
+                 Margin="0, 30"/>
+
+    </Grid>
+</Window>

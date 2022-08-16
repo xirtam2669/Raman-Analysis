@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raman", "Raman.csproj", "{5237984D-4CF1-4FD6-9E9E-DD4BD6016AD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5237984D-4CF1-4FD6-9E9E-DD4BD6016AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5237984D-4CF1-4FD6-9E9E-DD4BD6016AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5237984D-4CF1-4FD6-9E9E-DD4BD6016AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5237984D-4CF1-4FD6-9E9E-DD4BD6016AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {21821F55-173C-4683-9264-2ADC42F81905}
+	EndGlobalSection
+EndGlobal
