@@ -1,5 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
-namespace Raman
+
+namespace Raman.CSVReading
 {
     public class CSV
     {

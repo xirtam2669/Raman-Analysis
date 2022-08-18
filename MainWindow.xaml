@@ -23,6 +23,12 @@
                     <MenuItem Header="Test CSV"
                               Click="TestCsvOnClick"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="View">
+                    <MenuItem Header="X Axis to Raman Shift"
+                              Click="XDisplayRamanShiftOnCLick"></MenuItem>
+                    <MenuItem Header="X axis to pixels"
+                              Click="XDisplayPixelsOnClick"></MenuItem>
+                </MenuItem>
             </Menu>
         </DockPanel>
 
@@ -30,10 +36,10 @@
             <StackPanel
                         Margin="0,30, 0, 0"
                         Orientation="Vertical">
-                <TextBlock>Raman Shift</TextBlock>
+                <TextBlock Name="x_GraphLabel" Text="{Binding}"></TextBlock>
                 <ListBox Width="80"
                          Height="700"
-                         Name="x"
+                         Name="x_coordinates"
                          HorizontalAlignment="Left">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -50,7 +56,7 @@
                 <TextBlock>Dark Subtracted</TextBlock>
                 <ListBox Width="80"
                          Height="700"
-                         Name="y"
+                         Name="y_coordinates"
                          HorizontalAlignment="Left">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
