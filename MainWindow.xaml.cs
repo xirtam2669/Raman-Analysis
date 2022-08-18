@@ -42,12 +42,7 @@ namespace Raman
                 plot.Plot.AddScatter(x_coords, y_coords);
                 plot.Refresh();
 
-                    
-
-
             }
-
-
 
         }
 
