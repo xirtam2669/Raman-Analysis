@@ -29,6 +29,12 @@
                     <MenuItem Header="X axis to pixels"
                               Click="XDisplayPixelsOnClick"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="Fit">
+                    <MenuItem Header="Fit Options"
+                              Click="FitOnClick">
+                        
+                    </MenuItem>
+                </MenuItem>
             </Menu>
         </DockPanel>
 

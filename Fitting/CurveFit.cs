@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics;
+using Raman;
 
 namespace Raman.Fitting
 {
@@ -27,6 +28,8 @@ namespace Raman.Fitting
 
         public GaussianParams gaussianFit;
 
+        public FitParams fitparams;
+
         public double rmsErrorThreshold = 0;
 
         
@@ -38,13 +41,15 @@ namespace Raman.Fitting
             }
         }
 
-        public double Fit(double[] y, LinearParams baselineInitalConditions, GaussianParams gaussianInitialConditions)
+        public double Fit(double[] y, FitParams fitparams, LinearParams baselineInitalConditions, GaussianParams gaussianInitialConditions)
         {
             double rmsError = 0;
 
             this.baselineFit = baselineInitalConditions;
             this.gaussianFit = gaussianInitialConditions;
+            this.fitparams = fitparams;
 
+            
             //Fit curve takes arguments (y, x, composite function, inital conditions, error, max iterations)
             (double slope, double intercept, double amplitude, double μ, double σ) = MathNet.Numerics.Fit.Curve(x_pixel,
                                                                                                                 y,

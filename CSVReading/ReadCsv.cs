@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Raman;
 
 class ReadCSV
 {
-    public Tuple<List<string>, List<string>, List<string>> Read(string path)
+    public CsvData csvData;
+    public void Read(string path)
     {
         List<string> Pixels = new List<string>();
         List<string> RamanShift = new List<string>();
@@ -35,12 +37,15 @@ class ReadCSV
                     RamanShift.Add(item.D);
                     Pixels.Add(item.A);
                     y_coords.Add(item.H);
+
+                    
                 }
+
+                this.csvData = new CsvData(Pixels, RamanShift, y_coords);
             }
 
         }
 
-        return Tuple.Create(Pixels, RamanShift, y_coords);
     }
 
     static List<CSV> ReadCsv(string csvFileName)
@@ -53,12 +58,9 @@ class ReadCSV
         };
         using (var reader = new StreamReader(csvFileName))
         using (var csv = new CsvReader(reader, config))
-        {
-            var records = csv.GetRecords<CSV>();
-            return records.ToList();
-
-
-
+        {  
+                var records = csv.GetRecords<CSV>();
+                return records.ToList();
         }
 
 

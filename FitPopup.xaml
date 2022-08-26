@@ -1,0 +1,99 @@
+﻿<Window x:Class="Raman.FitPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Raman"
+        mc:Ignorable="d"
+        Title="Window1"
+        Height="200"
+        Width="400"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Grid>
+
+        <Border Height="150"
+                Width="350"
+                CornerRadius="25"
+                Background="#524E4F"></Border>
+
+        <StackPanel>
+            <StackPanel Width="400"
+                        Height="65"
+                        Orientation="Horizontal">
+                <Border Background="Transparent">
+                    <Grid  Margin="125,0,0,0"
+                           VerticalAlignment="Center"
+                           Width="100">
+                        <TextBlock HorizontalAlignment="Left" FontSize="24"
+                                   Margin="-50, 40,0,0">Fit</TextBlock>
+                    </Grid>
+                </Border>
+                <DockPanel VerticalAlignment="Center">
+                    <Menu Background="#524E4F"
+                          Margin="-35, 41,0,0">
+                        <MenuItem FontSize="17"
+                                  Name="FitMenu"
+                                  Header="{Binding}">
+                            <MenuItem Header="Single Gaussian"
+                                      Click="SingleGaussianOnClick"></MenuItem>
+                            <MenuItem Header="Double Gaussian"
+                                      Click="DoubleGaussianOnClick"></MenuItem>
+                            <MenuItem Header="Triple Gaussian"
+                                      Click="TripleGaussianOnClick"></MenuItem>
+                        </MenuItem>
+                    </Menu>
+                </DockPanel>
+
+            </StackPanel>
+            
+            <StackPanel Width="400"
+                        Height="75"
+                        Orientation="Horizontal">
+
+                <Grid  Margin="100,-10,0,0"
+                       VerticalAlignment="Center"
+                       Width="100">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="24"
+                               Margin="-25, 40,0,0">Fit Range</TextBlock>
+                </Grid>
+
+                
+                <TextBox Grid.Row="1"
+                         Margin="0, 35, 0 ,1"
+                         Width="75"
+                         Height="25"
+                         Name="minimum"
+                         />
+                <TextBlock Margin="0, 35, 0 ,1" FontSize="24"> - </TextBlock>
+                <TextBox Grid.Row="1"
+                         Margin="0, 35, 0 ,1"
+                         Width="75"
+                         Height="25"
+                         Name="maximum" 
+                         />
+
+            </StackPanel>
+
+            <StackPanel >
+                <StackPanel Orientation="Horizontal">
+                    <Grid Width="200"></Grid>
+                    
+                    <Button Click="CancelOnClick"
+                            Margin="10,5,0,0"
+                            Width="70"
+                            Height="20">Cancel</Button>
+                    <Button Click="SaveOnClick"
+                            Margin="0,5,0,0"
+                            Width="70"
+                            Height="20">Save</Button>
+                </StackPanel>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
