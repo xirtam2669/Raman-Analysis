@@ -23,7 +23,7 @@ namespace Raman
         //fit = 0 == single
         //fit = 1 == double
         //fit = 2 == triple
-        int fit;
+        string fit;
         string min;
         string max;
         public FitParams fitparams;
@@ -35,18 +35,18 @@ namespace Raman
         }
         private void SingleGaussianOnClick(object sender, RoutedEventArgs e)
         {
-            this.fit = 0;
+            this.fit = "Single";
             FitMenu.Header = "Single Gaussian";
         }
         private void DoubleGaussianOnClick(object sender, RoutedEventArgs e)
         {
-            this.fit = 1;
+            this.fit = "Double";
             FitMenu.Header = "Double Gaussian";
         }
 
         private void TripleGaussianOnClick(object sender, RoutedEventArgs e)
         {
-            this.fit = 2;
+            this.fit = "Triple";
             FitMenu.Header = "Triple Gaussian";
         }
 
@@ -56,12 +56,19 @@ namespace Raman
         }
         private void SaveOnClick(object sender, RoutedEventArgs e)
         {
-            this.min = minimum.Text;
-            this.max = maximum.Text;
-            double min_double = Convert.ToDouble(min);
-            double max_double = Convert.ToDouble(max);
-            this.fitparams = new FitParams(fit, min_double, max_double);
-            this.Close();
+            try
+            {
+                this.min = minimum.Text;
+                this.max = maximum.Text;
+                double min_double = Convert.ToDouble(min);
+                double max_double = Convert.ToDouble(max);
+                this.fitparams = new FitParams(fit, min_double, max_double);
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Specify a range.");
+            }
 
         }
     }

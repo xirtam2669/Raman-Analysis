@@ -42,7 +42,7 @@
             <StackPanel
                         Margin="0,30, 0, 0"
                         Orientation="Vertical">
-                <TextBlock Name="x_GraphLabel" Text="{Binding}"></TextBlock>
+                <TextBlock>Raman Shift</TextBlock>
                 <ListBox Width="80"
                          Height="700"
                          Name="x_coordinates"
@@ -59,7 +59,8 @@
             </StackPanel>
 
             <StackPanel Margin="0, 30, 0, 0" Orientation="Vertical">
-                <TextBlock>Dark Subtracted</TextBlock>
+                <TextBlock Name="y_GraphLabel"
+                           Text="{Binding}"></TextBlock>
                 <ListBox Width="80"
                          Height="700"
                          Name="y_coordinates"
@@ -79,6 +80,17 @@
         <WpfPlot Name="plot"
                  Grid.Column="1" 
                  Margin="0, 30, 0, 0"/>
+
+        <TextBlock FontSize="17"
+                   Grid.Column="2"
+                   Margin="0,50,0,0"
+                   Name="FitType"
+                   Text="{Binding}"></TextBlock>
+
+        <TextBlock FontSize="17"
+                   Grid.Column="2"
+                   Name="X_Range"
+                   Text="{Binding}"></TextBlock>
 
     </Grid>
 </Window>

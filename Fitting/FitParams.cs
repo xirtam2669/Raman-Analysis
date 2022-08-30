@@ -6,20 +6,17 @@ using System.Threading.Tasks;
 
 namespace Raman.Fitting
 {
-
     public class FitParams
     {
-        public int fit { get; set; }
+        public string Fit;
+        public double Min;
+        public double Max;
 
-        public double min { get; set; }
-
-        public double max { get; set; }
-
-        public FitParams(int fit, double min, double max)
+        public FitParams(String fit, double min, double max)
         {
-            this.fit = fit;
-            this.min = min;
-            this.max = max;
+            this.Fit = fit;
+            this.Min = min;
+            this.Max = max;
         }
     }
 }

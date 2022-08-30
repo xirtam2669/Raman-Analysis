@@ -31,7 +31,6 @@ namespace Raman.Fitting
         public FitParams fitparams;
 
         public double rmsErrorThreshold = 0;
-
         
         public CurveFit()
         {
@@ -47,9 +46,8 @@ namespace Raman.Fitting
 
             this.baselineFit = baselineInitalConditions;
             this.gaussianFit = gaussianInitialConditions;
-            this.fitparams = fitparams;
+            this.fitparams = fitparams;       
 
-            
             //Fit curve takes arguments (y, x, composite function, inital conditions, error, max iterations)
             (double slope, double intercept, double amplitude, double μ, double σ) = MathNet.Numerics.Fit.Curve(x_pixel,
                                                                                                                 y,

@@ -8,6 +8,7 @@ using System.Windows.Markup;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using Raman.CSVReading;
+using Raman.Fitting;
 
 namespace Raman
 {
@@ -17,6 +18,7 @@ namespace Raman
     public partial class MainWindow : Window
     {
         public CsvData csvData; //stores pixel, raman shift, intensity
+        public FitParams fitParams;
 
         public MainWindow()
         {
@@ -24,10 +26,6 @@ namespace Raman
         }
 
         public Tuple<List<string>, List<string>, List<string>> data; //Holds data returned from ReadCsv()
-
-        private List<string> pixelString; //For The List Box
-        private List<string> RamanShiftString; //For The List Box
-        private List<string> yString; //For The List Box
 
         private double[] x_coords; //For the graph
         private double[] y_coords; //For the graph
@@ -65,8 +63,7 @@ namespace Raman
         {
             try
             {
-                x_GraphLabel.Text = "Raman Shift"; //Label above Coords box
-
+                y_GraphLabel.Text = "Dark Subtracted";
                 x_coordinates.ItemsSource = csvData.RamanShift; //ListBox item source
                 y_coordinates.ItemsSource = csvData.Intensity; //ListBox item source
 
@@ -78,7 +75,7 @@ namespace Raman
 
                 plot.Plot.Clear(); //Clear Current Plot
                 plot.Plot.AddScatter(x_coords, y_coords);
-                plot.Plot.XLabel("Raman Shift");
+
                 plot.Plot.YLabel("Intensity");
                 plot.Refresh();
             }
@@ -93,10 +90,10 @@ namespace Raman
         {
             try
             {
-                x_GraphLabel.Text = "Pixels"; //Label above coords box
+                y_GraphLabel.Text = "Pixels"; //Label above coords box
 
                 x_coordinates.ItemsSource = csvData.RamanShift; //ListBox item source
-                y_coordinates.ItemsSource = csvData.Intensity; //ListBox item source
+                y_coordinates.ItemsSource = csvData.Pixels; //ListBox item source
 
                 string[] pixelArray = csvData.Pixels.ToArray(); //In order to convert to double
                 string[] Y_axisArray = csvData.Intensity.ToArray(); //In order to convert to double
@@ -120,13 +117,15 @@ namespace Raman
         private void FitOnClick(object sender, RoutedEventArgs e)
         {
             FitPopup FitWindow = new FitPopup();
-            FitWindow.Show();
-
+            FitWindow.ShowDialog();
+            this.fitParams = FitWindow.fitparams;
+            FitOptions();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void FitOptions()
         {
-
+            FitType.Text = "Fit + " + fitParams.Fit;
+            X_Range.Text = fitParams.Min + " - " + fitParams.Max;
         }
     }
 }

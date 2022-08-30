@@ -20,5 +20,5 @@ namespace Raman
             this.σ = sigma;
             this.μ = center;
         }
-    }
+    } 
 }
