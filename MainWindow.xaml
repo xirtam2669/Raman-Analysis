@@ -11,9 +11,9 @@
         Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230" />
-            <ColumnDefinition Width="1000"/>
-            <ColumnDefinition />
+            <ColumnDefinition Width="70*" />
+            <ColumnDefinition Width="290*"/>
+            <ColumnDefinition Width="80*"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel Background="DarkRed">
@@ -32,21 +32,20 @@
                 <MenuItem Header="Fit">
                     <MenuItem Header="Fit Options"
                               Click="FitOnClick">
-                        
                     </MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
 
         <StackPanel Margin="30, 10, 0, 0" Grid.Column="0" Orientation="Horizontal">
-            <StackPanel
-                        Margin="0,30, 0, 0"
-                        Orientation="Vertical">
+            
+            <StackPanel Grid.Column="0" Margin="0, 30, 0, 0" Orientation="Vertical" >
                 <TextBlock>Raman Shift</TextBlock>
                 <ListBox Width="80"
-                         Height="700"
+                         Height="900"
                          Name="x_coordinates"
-                         HorizontalAlignment="Left">
+                         HorizontalAlignment="Left"
+                         >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -58,11 +57,11 @@
                 </ListBox>
             </StackPanel>
 
-            <StackPanel Margin="0, 30, 0, 0" Orientation="Vertical">
+            <StackPanel Grid.Column="0" Margin="0, 30, 0, 0" Orientation="Vertical">
                 <TextBlock Name="y_GraphLabel"
                            Text="{Binding}"></TextBlock>
                 <ListBox Width="80"
-                         Height="700"
+                         Height="900"
                          Name="y_coordinates"
                          HorizontalAlignment="Left">
                     <ListBox.ItemTemplate>
@@ -75,6 +74,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </StackPanel>
+            
         </StackPanel>
 
         <WpfPlot Name="plot"
@@ -85,12 +85,12 @@
                    Grid.Column="2"
                    Margin="0,50,0,0"
                    Name="FitType"
-                   Text="{Binding}"></TextBlock>
+                   Text="{Binding}">dd</TextBlock>
 
         <TextBlock FontSize="17"
                    Grid.Column="2"
                    Name="X_Range"
-                   Text="{Binding}"></TextBlock>
+                   Text="{Binding}">dd</TextBlock>
 
     </Grid>
 </Window>
