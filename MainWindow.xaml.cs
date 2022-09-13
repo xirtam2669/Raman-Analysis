@@ -19,12 +19,14 @@ namespace Raman
     {
         public CsvData csvData; //stores pixel, raman shift, intensity
         public FitParams fitParams;
+        
 
         public MainWindow()
         {
             InitializeComponent();
+            Conditions.Visibility = Visibility.Collapsed;  
         }
-
+        
         public Tuple<List<string>, List<string>, List<string>> data; //Holds data returned from ReadCsv()
 
         private double[] x_coords; //For the graph
@@ -32,6 +34,7 @@ namespace Raman
 
         private void TestCsvOnClick(object sender, RoutedEventArgs e)
         {
+          
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog(); //Open File viewer
@@ -124,8 +127,9 @@ namespace Raman
 
         private void FitOptions()
         {
-            FitType.Text = "Fit + " + fitParams.Fit;
-            X_Range.Text = fitParams.Min + " - " + fitParams.Max;
+            Conditions.Visibility = Visibility.Visible;
+            FitType.Text = "Fit: " + fitParams.Fit;
+            X_Range.Text = "Range: " + fitParams.Min + " - " + fitParams.Max;
         }
     }
 }
