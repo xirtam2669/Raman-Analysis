@@ -7,6 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics;
 using Raman;
+using System.Windows;
+using System.Windows.Navigation;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Controls;
+using ScottPlot;
+using System.Threading;
+using System.Windows.Automation.Peers;
+using System.Runtime.CompilerServices;
 
 namespace Raman.Fitting
 {
@@ -15,10 +23,11 @@ namespace Raman.Fitting
         //σ == width
         //μ == center
 
-        private double[] x_pixel = new double[2048];
-        private double[] y_pixel = new double[2048];
+        public double[] pixels;
 
-        private double peakRange { get; set; }
+        public double[] intensity;
+
+        public double[] ramanShift;
 
         public LinearParams baslineInitalConditions;
 
@@ -26,53 +35,90 @@ namespace Raman.Fitting
 
         public LinearParams baselineFit;
 
-        public GaussianParams gaussianFit;
+        public static List<GaussianParams> gaussianFit = new List<GaussianParams>();
 
         public FitParams fitparams;
 
-        public double rmsErrorThreshold = 0;
-        
-        public CurveFit()
+        public double[] fitOutput;
+
+        public double rmsErrorThreshold = 10000;
+
+        public double[] y_test = new double[35];
+
+        public CurveFit(double[] Pixels, double[] Intensity, double[] ramanshift, FitParams fitparams)
         {
-            for (int i = 0; i < 2048; i++)
-            {
-                x_pixel[i] = (double)i;
-            }
+            this.pixels = Pixels;
+            this.intensity = Intensity;
+            this.ramanShift = ramanshift;
+            this.fitparams = fitparams;
         }
 
-        public double Fit(double[] y, FitParams fitparams, LinearParams baselineInitalConditions, GaussianParams gaussianInitialConditions)
+        public static double[] Fit(double[] x, double[] raw_y, LinearParams baselineInitialConditions, List<GaussianParams> gaussianInitialConditionsList)
         {
-            double rmsError = 0;
+            double epsx = 0.000001;
+            int maxits = 0;
+            int info;
+            alglib.lsfitstate state;
+            alglib.lsfitreport rep;
+            double diffstep = 0.0001;
 
-            this.baselineFit = baselineInitalConditions;
-            this.gaussianFit = gaussianInitialConditions;
-            this.fitparams = fitparams;       
+            double[,] xx = new double[x.Length, 1];
+            for (int i = 0; i < x.Length; i++)
+            {
+                xx[i, 0] = x[i];
+            }
+            double[] c = GenCoefficientArrayFromCompositeParams(baselineInitialConditions, gaussianInitialConditionsList);
+
+            alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
+            alglib.lsfitsetcond(state, epsx, maxits);
+            alglib.lsfitfit(state, FitFunc, null, null);
+            alglib.lsfitresults(state, out info, out c, out rep);
+
+            if (info != 2)
+            {
+                //error
+            }
+            //fitted coefs
+            return c;
+
+        }
+        /*
+        public double Fit(LinearParams baselineInitalConditions, GaussianParams gaussianInitialConditions)
+        {   
+            double rmsError = 0;
+                    
+            this.baslineInitalConditions = baselineInitalConditions;
+            this.gaussianInitialConditions = gaussianInitialConditions;
 
             //Fit curve takes arguments (y, x, composite function, inital conditions, error, max iterations)
-            (double slope, double intercept, double amplitude, double μ, double σ) = MathNet.Numerics.Fit.Curve(x_pixel,
-                                                                                                                y,
-                                                                                                                (slope,
-                                                                                                                intercept,
-                                                                                                                amplitude,
-                                                                                                                σ,
-                                                                                                                μ,
-                                                                                                                x) => Composite(slope, intercept, amplitude, μ, σ, x),
-                                                                                                                baslineInitalConditions.Slope,
-                                                                                                                baslineInitalConditions.Intercept,
-                                                                                                                gaussianInitialConditions.Amplitude,
-                                                                                                                gaussianInitialConditions.μ,
-                                                                                                                gaussianInitialConditions.σ,
-                                                                                                                1E-9,
-                                                                                                                2000);
 
-            rmsError = RMSError(slope, intercept, amplitude, μ, σ, x_pixel, y);
 
-            if(rmsError < rmsErrorThreshold)
+
+
+
+            if (fitparams.Fit == "Single")
             {
-                this.baselineFit = new LinearParams(slope, intercept);
-                this.gaussianFit = new GaussianParams(amplitude, μ, σ);
-            }
+                (double slope, double intercept, double amplitude, double μ, double σ) = MathNet.Numerics.Fit.Curve(ramanShift,
+                                                                                                                    intensity,
+                                                                                                                    (slope,
+                                                                                                                    intercept,
+                                                                                                                    amplitude,
+                                                                                                                    μ,
+                                                                                                                    σ,
+                                                                                                                    x) => Composite(slope, intercept, amplitude, μ, σ, x),
+                                                                                                                    baslineInitalConditions.Slope,
+                                                                                                                    baslineInitalConditions.Intercept,
+                                                                                                                    gaussianInitialConditions.Amplitude,
+                                                                                                                    gaussianInitialConditions.μ,
+                                                                                                                    gaussianInitialConditions.σ,
+                                                                                                                    1E-9,
+                                                                                                                    2000);
 
+                
+                rmsError = RMSError(baselineFit.Slope, baselineFit.Intercept, gaussianFit.Amplitude,
+                                gaussianFit.μ, gaussianFit.σ, pixels, intensity);
+            }
+            double[] f = new double[ramanShift.Length];          
             return rmsError;
         }
 
@@ -89,23 +135,98 @@ namespace Raman.Fitting
 
             mean = sum_squares / x.Length;
             root = Math.Sqrt(mean);
+            if(root < rmsErrorThreshold)
+            {
+                this.fitOutput = Run(fitparams.Fit, ramanShift.Length, ramanShift);
+            }
             return root;
         }
-
-        private static double Gaussian(double amplitude, double μ, double σ, double x)
+        */
+        public double[] RunFit(LinearParams paramsLinearBaselineInitialConditions, List<GaussianParams> paramsGaussianListInitalCondtions, double[] ramanshift, double[] intensity)
         {
-            return Normal.PDF(μ, σ, x);
+            double[] cFitted = Fit(ramanshift, intensity, paramsLinearBaselineInitialConditions, paramsGaussianListInitalCondtions);
+            baselineFit = new LinearParams(cFitted[0], cFitted[1]);
+
+            for (int i = 2; i < cFitted.Length; i += 3)
+            {
+                gaussianFit.Add(new GaussianParams(cFitted[i], cFitted[i + 1], cFitted[i + 2]));
+            }
+
+            this.fitOutput = GenXYFromComposite(baselineFit, gaussianFit, ramanshift);
+            return this.fitOutput;
         }
 
-        private static double LinearBaseline(double slope, double intercept, double x)
+        private static double Gaussian(GaussianParams p, double x)
         {
-            return slope * x + intercept;
+            double numerator = (x - p.Center) * (x - p.Center);
+            double denominator = 2 * (p.SD * p.SD);
+            double output = p.Amplitude * Math.Exp(-numerator / denominator);
+            return output;
         }
 
-        private static double Composite(double slope, double intercept, double amplitude, double μ, double σ, double x)
+        private static double LinearBaseline(LinearParams p, double x)
         {
-            return LinearBaseline(slope, intercept, x) + Gaussian( amplitude, σ, μ, x);
+            return p.Slope * x + p.Intercept;
         }
 
+        private static double Composite(LinearParams paramsBaseline, List<GaussianParams> paramsaGaussianList, double x)
+        {
+            double r = LinearBaseline(paramsBaseline, x);
+
+            foreach (GaussianParams paramsGuassian in paramsaGaussianList)
+            {
+                double gaus = Gaussian(paramsGuassian, x);
+                r += gaus;
+            }
+            return r;
+        }
+
+        public static double[] GenCoefficientArrayFromCompositeParams(LinearParams paramsBaseline, List<GaussianParams> paramsGaussianList)
+        {
+            double[] c = new double[2 + 3 * paramsGaussianList.Count];
+
+            c[0] = paramsBaseline.Slope;
+            c[1] = paramsBaseline.Intercept;
+            int count = 0;
+
+            for (int i = 2; i < c.Length; i = i + 3)
+            {
+                
+                try
+                {
+                    c[i] = paramsGaussianList[count].Amplitude;
+                    c[i + 1] = paramsGaussianList[count].Center;
+                    c[i + 2] = paramsGaussianList[count].SD;
+                    count++;
+                }
+                catch
+                {
+                    return c;
+                }
+                
+            }
+            return c;
+        }
+
+        public static void FitFunc(double[] c, double[] x, ref double func, object obj)
+        {
+            LinearParams paramsBaseline = new LinearParams(c[0], c[1]);
+            List<GaussianParams> paramsGaussianList = new List<GaussianParams>();
+
+            for (int i = 2; i < c.Length; i += 3)
+            {
+                paramsGaussianList.Add(new GaussianParams(c[i], c[i + 1], c[i + 2]));
+            }
+            func = Composite(paramsBaseline, paramsGaussianList, x[0]);
+        }
+        public double[] GenXYFromComposite(LinearParams paramsBaseline, List<GaussianParams> paramsGaussianList, double[] x)
+        {
+            double[] y = new double[x.Length];
+            for (int i = 0; i < x.Length; i++)
+            {
+                y[i] = Composite(paramsBaseline, paramsGaussianList, x[i]);
+            }
+            return y;
+        }
     }
 }

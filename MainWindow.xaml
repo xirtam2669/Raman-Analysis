@@ -35,6 +35,9 @@
                     <MenuItem Header="Fit Options"
                               Click="FitOnClick">
                     </MenuItem>
+                    <MenuItem Header="Curve Fit"
+                              Click="CurveFitOnClick">
+                    </MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -63,7 +66,9 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0"
-                           Foreground="#ed9f4b">Raman Shift</TextBlock>
+                           Name="x_GraphLabel"
+                           Foreground="#ed9f4b"
+                           Text="{Binding}"></TextBlock>
 
                 <ListBox Grid.Row="1"
                          Grid.Column="0"
@@ -137,46 +142,136 @@
                  Grid.Column="1"
                  Margin="0, 30, 0, 0" />
 
-        <StackPanel Name="Conditions" Margin="10, 0, 0, 0" Orientation="Vertical" Grid.Column="2">
+        <ScrollViewer Name="Conditions" Grid.Column="2" Margin="0,30,0,0">
+           
+            <StackPanel Margin="10, 0, 0, 0"
+                        Orientation="Vertical"
+                        Grid.Column="2">
 
-            <StackPanel Margin="0, 0, 0, 20">
-                <TextBlock FontSize="17"
-                           Grid.Column="2"
-                           Margin="0,50,0,0"
-                           Name="FitType"
-                           Foreground="#ed9f4b"
-                           Text="{Binding}"></TextBlock>
-                <TextBlock FontSize="17"
-                           Grid.Column="2"
-                           Name="X_Range"
-                           Foreground="#ed9f4b"
-                           Text="{Binding}"></TextBlock>
-            </StackPanel>
-
-            <StackPanel>
-                <StackPanel Grid.Column="2">
+                <StackPanel Margin="0, 0, 0, 20">
                     <TextBlock FontSize="17"
-                               Foreground="#ed9f4b">Baseline Inital Conditions:</TextBlock>
-                    <TextBlock Margin="0, 10, 0, 0"
-                               FontSize="17"
-                               Foreground="#ed9f4b">Slope</TextBlock>
-                    <TextBox Margin="0, 0, 30, 0"></TextBox>
-                    <TextBlock Margin="0, 0, 0, 0"
-                               FontSize="17"
-                               Foreground="#ed9f4b">Intercept</TextBlock>
-                    <TextBox Margin="0, 0, 30, 0"></TextBox>
+                               Grid.Column="2"
+                               Name="FitType"
+                               Foreground="#ed9f4b"
+                               Text="{Binding}"></TextBlock>
+                    <TextBlock FontSize="17"
+                               Grid.Column="2"
+                               Name="X_Range"
+                               Foreground="#ed9f4b"
+                               Text="{Binding}"></TextBlock>
                 </StackPanel>
 
-                <StackPanel Margin="0,20,0,0"
-                            Grid.Column="2">
-                    <TextBlock FontSize="17"
-                               Foreground="#ed9f4b">Baseline Inital Conditions:</TextBlock>
-                    <TextBlock Margin="0, 10, 0, 0"
-                               FontSize="17"
-                               Foreground="#ed9f4b">Slope</TextBlock>
+                <StackPanel Margin="0,0,0,0">
+                    <StackPanel Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Baseline Inital Conditions:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Slope</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Slope"></TextBox>
+                        <TextBlock Margin="0, 0, 0, 0"                                  
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Intercept</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Intercept"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+
+                    </StackPanel>
+
+                    <StackPanel Name="SingleGaus"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_one"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_one"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_one"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+
+                    </StackPanel>
+
+                    <StackPanel Name="DoubleGaus"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_two"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_two"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_two"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+
+                    </StackPanel>
+
+                    <StackPanel Name="Triple_Gaus"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_three"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_three"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_three"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
-        </StackPanel>
-        
+        </ScrollViewer>
     </Grid>
 </Window>

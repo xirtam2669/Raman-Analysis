@@ -8,8 +8,8 @@ namespace Raman
 {
     internal class LinearParams
     {
-        public double Slope {get; set;}
-        public double Intercept {get; set;}
+        public double Slope;
+        public double Intercept;
 
         public LinearParams(double slope, double intercept)
         {

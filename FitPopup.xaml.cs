@@ -20,10 +20,7 @@ namespace Raman
     /// </summary>
     public partial class FitPopup : Window
     {
-        //fit = 0 == single
-        //fit = 1 == double
-        //fit = 2 == triple
-        string fit;
+        string fit = "Single";
         string min;
         string max;
         public FitParams fitparams;
