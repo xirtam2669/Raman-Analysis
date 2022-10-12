@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Raman
 {
-    internal class GaussianParams
+    public class GaussianParams
     {
         public double Amplitude { get; set; }
         public double Center { get; set; }

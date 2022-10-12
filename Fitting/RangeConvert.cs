@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Raman.Fitting
 {
-    class RangeConvert
+    public class RangeConvert
     {
         public double[] pixels;
         public double[] intensity;

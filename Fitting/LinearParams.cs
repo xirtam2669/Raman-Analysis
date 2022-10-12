@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Raman
 {
-    internal class LinearParams
+    public class LinearParams
     {
         public double Slope;
         public double Intercept;

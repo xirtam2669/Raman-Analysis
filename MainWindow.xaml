@@ -32,11 +32,15 @@
                               Click="XDisplayPixelsOnClick"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Fit">
+                    <MenuItem Header="Curve Fit"
+                              Click="CurveFitOnClick">
+                    </MenuItem>
                     <MenuItem Header="Fit Options"
                               Click="FitOnClick">
                     </MenuItem>
-                    <MenuItem Header="Curve Fit"
-                              Click="CurveFitOnClick">
+                    <MenuItem Header="Import Fit Profile"
+                              Click="ImportFit">
+                        
                     </MenuItem>
                 </MenuItem>
             </Menu>
@@ -142,8 +146,35 @@
                  Grid.Column="1"
                  Margin="0, 30, 0, 0" />
 
-        <ScrollViewer Name="Conditions" Grid.Column="2" Margin="0,30,0,0">
-           
+
+        <Grid VerticalAlignment="Top" Grid.Column="2" Margin="0,30,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+
+                <!-- Absolutely no idea why this works. Don't Touch. -->
+                <Button Grid.Column="2"
+                        Height="30"
+                        Margin="0,0,0,10"
+                        Click="Results_View"
+                        BorderBrush="Transparent">Fit Results</Button>
+
+                <!-- Absolutely no idea why this works. Don't touch. -->
+                <Button
+                        Height="30"
+                        Margin="0,0,0,10"
+                        Background="#ed9f4b"
+                        BorderBrush="Transparent"
+                        Click="Conditions_View">Set Params</Button>
+
+        </Grid>
+
+        <ScrollViewer Name="Conditions"
+                      Grid.Column="2"
+                      Margin="0,60,0,0">
+
             <StackPanel Margin="10, 0, 0, 0"
                         Orientation="Vertical"
                         Grid.Column="2">
@@ -170,7 +201,7 @@
                                    Foreground="#ed9f4b">Slope</TextBlock>
                         <TextBox Margin="0, 0, 30, 0"
                                  Name="Slope"></TextBox>
-                        <TextBlock Margin="0, 0, 0, 0"                                  
+                        <TextBlock Margin="0, 0, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Intercept</TextBlock>
                         <TextBox Margin="0, 0, 30, 0"
@@ -217,7 +248,7 @@
                                 Margin="0,10,0,0"
                                 Grid.Column="2">
                         <TextBlock FontSize="15"
-                                   Foreground="#ed9f4b">Gaussian Inital Conditions:</TextBlock>
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions2:</TextBlock>
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Amplitude</TextBlock>
@@ -246,7 +277,7 @@
                                 Margin="0,10,0,0"
                                 Grid.Column="2">
                         <TextBlock FontSize="15"
-                                   Foreground="#ed9f4b">Gaussian Inital Conditions:</TextBlock>
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions3:</TextBlock>
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Amplitude</TextBlock>
@@ -268,10 +299,231 @@
                                    Fill="white"
                                    Stroke="white"
                                    HorizontalAlignment="Stretch" />
-
                     </StackPanel>
+                    <Button Height="20"
+                            Margin="0,20,10,15"
+                            Click="SaveFitProfileOnClick"
+                            Background="#ed9f4b">Save Fit Profile</Button>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
+
+        <ScrollViewer Name="Results"
+                      Grid.Column="2"
+                      Margin="0,59,0,1">
+
+            <StackPanel>
+                <StackPanel>
+                    <TextBlock Margin="5,10,0,0"
+                               FontSize="15"
+                               Foreground="#ed9f4b">Resulting Fit Parameters:</TextBlock>
+                    <Rectangle Margin="0,10,0,10"
+                               Height="1"
+                               Fill="white"
+                               Stroke="white"
+                               HorizontalAlignment="Stretch" />
+
+                    <TextBlock FontSize="15"
+                               Foreground="#ed9f4b"
+                               Margin="5,0,0,10">Linear Params:</TextBlock>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5,0,0,0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Slope:</TextBlock>
+                        <TextBlock Margin="5,0,0,0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b"
+                                   Name="Slope_results">123</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b"
+                                   Margin="5,0,0,0">Intercept:</TextBlock>
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b"
+                                   Margin="5,0,0,0"
+                                   Name="Intercept_results">123</TextBlock>
+                    </StackPanel>
+
+
+                    <Rectangle Margin="0,10,0,10"
+                               Height="1"
+                               Fill="white"
+                               Stroke="white"
+                               HorizontalAlignment="Stretch" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,10"
+                                   Foreground="#ed9f4b">Gaussian One Params:</TextBlock>
+                        <CheckBox Name="Gaus_One_Check" Margin="5,4,0,0"></CheckBox>
+                    </StackPanel>
+                    
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,0"
+                                   Foreground="#ed9f4b">Amplitude:</TextBlock>
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,0"
+                                   Foreground="#ed9f4b"
+                                   Name="Amplitude_results">123</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,0"
+                                   Foreground="#ed9f4b">μ:</TextBlock>
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,0"
+                                   Name="μ_results"
+                                   Foreground="#ed9f4b">123</TextBlock>
+
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,0"
+                                   Foreground="#ed9f4b">σ:</TextBlock>
+                        <TextBlock FontSize="15"
+                                   Margin="5,0,0,0"
+                                   Name="σ_results"
+                                   Foreground="#ed9f4b">123</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Name="Gaussian_results_two">
+                        <Rectangle Margin="0,10,0,10"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,10"
+                                       Foreground="#ed9f4b">Gaussian Two Params:</TextBlock>
+                            <CheckBox Name="Gaus_Two_Check" Margin="5,4,0,0"></CheckBox>
+                        </StackPanel>
+                        
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">Amplitude:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b"
+                                       Name="amplitude_results_two">123</TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">μ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="μ_results_two"
+                                       Foreground="#ed9f4b">123</TextBlock>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">σ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="σ_results_two"
+                                       Foreground="#ed9f4b">123</TextBlock>
+                        </StackPanel>
+
+
+
+                        <Rectangle Margin="0,10,0,10"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+
+                    </StackPanel>
+
+                    <StackPanel Name="Gaussian_results_three">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,10"
+                                       Foreground="#ed9f4b">Gaussian Three Params:</TextBlock>
+                            <CheckBox Name="Gaus_Three_Check" Margin="5,4,0,0"></CheckBox>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">Amplitude:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b"
+                                       Name="amplitude_results_three">123</TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">μ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="μ_results_three"
+                                       Foreground="#ed9f4b">123</TextBlock>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">σ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="σ_results_three"
+                                       Foreground="#ed9f4b">123</TextBlock>
+                        </StackPanel>
+
+
+
+                        <Rectangle Margin="0,10,0,10"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                </StackPanel>
+                <Button BorderBrush="Transparent" 
+                        Click="CalculatePeakAreaRatio" 
+                        Background="#ed9f4b" 
+                        Height="30"
+                        Name="Peak_Area_Ratio_Button">Calculate Peak Area Ratio</Button>
+                
+                <Button BorderBrush="Transparent"
+                        Click="Button_Click"
+                        Background="#ed9f4b"
+                        Name="Integrate_Button"
+                        Height="30">Integrate</Button>
+                
+                <Rectangle Margin="0,10,0,10"
+                           Height="1"
+                           Fill="white"
+                           Stroke="white"
+                           HorizontalAlignment="Stretch" />
+                <TextBlock FontSize="15"
+                           Margin="5,0,0,0"
+                           Foreground="#ed9f4b"
+                           HorizontalAlignment="Center">Choose Two Peaks To integrate:</TextBlock>
+                <TextBlock HorizontalAlignment="Center"
+                           FontSize="15"
+                           Margin="5,0,0,10"
+                           Foreground="#ed9f4b">(Peaks numbered from Left to right)</TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+        
     </Grid>
 </Window>

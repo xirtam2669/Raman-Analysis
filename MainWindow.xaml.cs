@@ -9,6 +9,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using Raman.CSVReading;
 using Raman.Fitting;
+using System.IO;
+using System.Windows.Shapes;
+using System.Text.RegularExpressions;
+using System.Windows.Media.TextFormatting;
+using System.Net;
 
 namespace Raman
 {
@@ -18,14 +23,17 @@ namespace Raman
     public partial class MainWindow : Window
     {
         public CsvData csvData; //stores pixel, raman shift, intensity
-        public FitParams fitParams;
-        GaussianParams gaussianParams;
-        RangeConvert rangeConvert;
+        public FitParams? fitParams;
+        public LinearParams linearParams;
+        public List<GaussianParams> gaussianParamsList = new List<GaussianParams>();
+        public RangeConvert range;
+        public CurveFit? curveFit;
 
         public MainWindow()
         {
             InitializeComponent();
             Conditions.Visibility = Visibility.Collapsed; 
+            Results.Visibility = Visibility.Collapsed;
             DoubleGaus.Visibility = Visibility.Collapsed;
             Triple_Gaus.Visibility = Visibility.Collapsed;
         }
@@ -50,14 +58,13 @@ namespace Raman
                     rc.Read(openFileDialog.FileName); //ReadCsv for filename
                     this.csvData = rc.csvData; //instance of pixels, raman shift, and intensity
 
-                    XDisplayRamanShift();
+                    XDisplayRamanShift(true);
                 }
             }
             catch(Exception ex)
             {
                 MessageBox.Show("Unsupported file.");
-            }
-            
+            }            
         }
 
         private void XDisplayRamanShiftOnCLick(object sender, RoutedEventArgs e) //When clicking back to raman x axis
@@ -65,7 +72,7 @@ namespace Raman
             XDisplayRamanShift();
         }
 
-        private void XDisplayRamanShift()
+        private void XDisplayRamanShift(bool newCsv = false)
         {
             try
             {
@@ -82,15 +89,29 @@ namespace Raman
 
                 plot.Plot.Clear(); //Clear Current Plot
                 plot.Plot.AddScatter(x_coords, y_coords);
+                try
+                {
+                    if (newCsv)
+                    {
 
-                plot.Plot.YLabel("Intensity");
+                    }
+                    else
+                    {
+                        plot.Plot.AddScatter(range.ramanShift, curveFit.fitOutput);
+                    }                 
+                }
+                catch
+                {
+
+                }
+                plot.Plot.YLabel("Intensity (arb)");
+                plot.Plot.XLabel("Raman Shift cm−1");
                 plot.Refresh();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("You must import a file first.");
-            }
-            
+            }            
         }
 
         private void XDisplayPixelsOnClick(object sender, RoutedEventArgs e)
@@ -109,6 +130,14 @@ namespace Raman
                 y_coords = Array.ConvertAll(Y_axisArray, double.Parse); //Double coordinates for graph 
                 plot.Plot.Clear();
                 plot.Plot.AddScatter(x_coords, y_coords);
+                try 
+                {
+                    plot.Plot.AddScatter(range.pixels, curveFit.fitOutput);
+                }
+                catch
+                {
+
+                }
                 plot.Plot.XLabel("Pixels");
                 plot.Plot.YLabel("Intensity");
                 plot.Refresh();
@@ -123,62 +152,309 @@ namespace Raman
 
         private void FitOnClick(object sender, RoutedEventArgs e)
         {
+            gaussianParamsList = new List<GaussianParams>(); //clear gaussian
             FitPopup FitWindow = new FitPopup();
-            FitWindow.ShowDialog();
+
+            FitWindow.ShowDialog(); //open fit settings window
+
             this.fitParams = FitWindow.fitparams;
             FitConditions();
+         
         }
 
         private void FitConditions()
         {
-            Conditions.Visibility = Visibility.Visible; //will be important probably
-            FitType.Text = "Fit: " + fitParams.Fit;
-            if(fitParams.Fit == "Single")
+            try
             {
-                DoubleGaus.Visibility = Visibility.Collapsed;
-                Triple_Gaus.Visibility = Visibility.Collapsed;
+                Slope.Text = "";
+                Intercept.Text = "";
+                Amplitude_one.Text = "";
+                μ_one.Text = "";
+                σ_one.Text = "";
+                Amplitude_two.Text = "";
+                μ_two.Text = "";
+                σ_two.Text = "";
+                Amplitude_three.Text = "";
+                μ_three.Text = "";
+                σ_three.Text = "";
+                Results.Visibility = Visibility.Collapsed;
+                Conditions.Visibility = Visibility.Visible;
+                FitType.Text = "Fit: " + fitParams.Fit;
+                X_Range.Text = "Range: " + fitParams.Min + " - " + fitParams.Max;
+                if (fitParams.Fit == "Single")
+                {
+                    DoubleGaus.Visibility = Visibility.Collapsed;
+                    Triple_Gaus.Visibility = Visibility.Collapsed;
+                }
+                if (fitParams.Fit == "Double")
+                {
+                    DoubleGaus.Visibility = Visibility.Visible;
+                    Triple_Gaus.Visibility = Visibility.Collapsed;
+                }
+                if (fitParams.Fit == "Triple")
+                {
+                    DoubleGaus.Visibility = Visibility.Visible;
+                    Triple_Gaus.Visibility = Visibility.Visible;
+                }
             }
-            if (fitParams.Fit == "Double")
+            catch
             {
-                DoubleGaus.Visibility = Visibility.Visible;
+                Conditions.Visibility = Visibility.Collapsed;
             }
-            if(fitParams.Fit == "Triple")
+
+            if (gaussianParamsList.Count > 0)
             {
-                Triple_Gaus.Visibility = Visibility.Visible;
-            }
+                Slope.Text = linearParams.Slope.ToString();
+                Intercept.Text = linearParams.Intercept.ToString();
             
-            X_Range.Text = "Range: " + fitParams.Min + " - " + fitParams.Max;
-            
+                for (int i = 0; i < gaussianParamsList.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        Amplitude_one.Text = gaussianParamsList[i].Amplitude.ToString();
+                        μ_one.Text = gaussianParamsList[i].Center.ToString();
+                        σ_one.Text = gaussianParamsList[i].SD.ToString();
+                    }
+                    if (i == 1)
+                    {
+                        Amplitude_two.Text = gaussianParamsList[i].Amplitude.ToString();
+                        μ_two.Text = gaussianParamsList[i].Center.ToString();
+                        σ_two.Text = gaussianParamsList[i].SD.ToString();
+                    }
+                    if (i == 2)
+                    {
+                        Amplitude_three.Text = gaussianParamsList[i].Amplitude.ToString();
+                        μ_three.Text = gaussianParamsList[i].Center.ToString();
+                        σ_three.Text = gaussianParamsList[i].SD.ToString();
+                    }
+                }
+            }
         }
 
         private void CurveFitOnClick(object sender, RoutedEventArgs e)
         {
-            LinearParams linearparams = new LinearParams(double.Parse(Slope.Text), double.Parse(Intercept.Text));
-            List <GaussianParams> paramsGaussianInitialConditionsList = new List<GaussianParams>();
-
-            GaussianParams gaussianParamsOne = new GaussianParams(Double.Parse(Amplitude_one.Text), Double.Parse(μ_one.Text), Double.Parse(σ_one.Text));
-            paramsGaussianInitialConditionsList.Add(gaussianParamsOne);
-            if (Amplitude_two.Text.Length != 0)
+            try
             {
-                GaussianParams gaussianParams2 = new GaussianParams(Double.Parse(Amplitude_two.Text), Double.Parse(μ_two.Text), Double.Parse(σ_two.Text));
-                paramsGaussianInitialConditionsList.Add(gaussianParams2);
-            }
-            if (Amplitude_three.Text.Length != 0)
+                curveFit = null;
+                if(fitParams == null || linearParams == null)
+                {
+                    LinearParams linearParamsInitalConditions = new LinearParams(double.Parse(Slope.Text), double.Parse(Intercept.Text));
+                    List<GaussianParams> paramsGaussianInitialConditionsList = new List<GaussianParams>();
+
+                    GaussianParams gaussianParamsOne = new GaussianParams(Double.Parse(Amplitude_one.Text), Double.Parse(μ_one.Text), Double.Parse(σ_one.Text));
+                    paramsGaussianInitialConditionsList.Add(gaussianParamsOne);
+                    if (Amplitude_two.Text.Length != 0)
+                    {
+                        GaussianParams gaussianParams2 = new GaussianParams(Double.Parse(Amplitude_two.Text), Double.Parse(μ_two.Text), Double.Parse(σ_two.Text));
+                        paramsGaussianInitialConditionsList.Add(gaussianParams2);
+                    }
+                    if (Amplitude_three.Text.Length != 0)
+                    {
+                        GaussianParams gaussianParams3 = new GaussianParams(Double.Parse(Amplitude_three.Text), Double.Parse(μ_three.Text), Double.Parse(σ_three.Text));
+                        paramsGaussianInitialConditionsList.Add(gaussianParams3);
+                    }
+                    RangeConvert rangeConvert = new RangeConvert(csvData, fitParams);
+
+                    this.range = rangeConvert;
+                    this.gaussianParamsList = paramsGaussianInitialConditionsList;
+                    this.linearParams = linearParamsInitalConditions;
+                }
+                else
+                {
+                    this.range = new RangeConvert(csvData, fitParams);
+                }               
+            }    
+            catch
             {
-                GaussianParams gaussianParams3 = new GaussianParams(Double.Parse(Amplitude_three.Text), Double.Parse(μ_three.Text), Double.Parse(σ_three.Text));
-                paramsGaussianInitialConditionsList.Add(gaussianParams3);
+                MessageBox.Show("Please supply ALL parameters for the fit", "Could not fit");
+                return;
             }
 
-            RangeConvert rangeConvert = new RangeConvert(csvData, fitParams);  
+            try
+            {
+                this.curveFit = new CurveFit(range.pixels, range.intensity, range.ramanShift, fitParams);
+                string error = curveFit.RunFit(linearParams, gaussianParamsList, range.ramanShift, range.intensity);
 
-            CurveFit curveFit = new CurveFit(rangeConvert.pixels, rangeConvert.intensity, rangeConvert.ramanShift, fitParams);
-            double[] error = curveFit.RunFit(linearparams, paramsGaussianInitialConditionsList, rangeConvert.ramanShift, rangeConvert.intensity);
-            
-            MessageBox.Show(error.ToString());
-            plot.Plot.Clear();
-            plot.Plot.AddScatter(x_coords, y_coords);
-            plot.Plot.AddScatter(rangeConvert.ramanShift, curveFit.fitOutput);
-            plot.Refresh();
+                MessageBox.Show(error.ToString(), "Fit least squares error.");
+                plot.Plot.Clear();
+                plot.Plot.AddScatter(x_coords, y_coords);
+                plot.Plot.AddScatter(range.ramanShift, curveFit.fitOutput);
+                plot.Refresh();
+
+            }
+            catch
+            {
+                MessageBox.Show("Please supply ALL parameters for the fit", "Could not fit");
+                return;
+            }
+
+        }
+        private void SaveFitProfileOnClick(object sender, RoutedEventArgs e)
+        {
+            List<string> textList = new List<string>();
+
+            textList.Add("[CONFIG]");
+            textList.Add("fit[" + this.fitParams.Fit + "]");
+            textList.Add("min[" + this.fitParams.Min + "]");
+            textList.Add("max[" + this.fitParams.Max + "]");
+            textList.Add("slope[" + this.linearParams.Slope + "]");
+            textList.Add("intercept[" + this.linearParams.Intercept + "]");
+
+            for (int i = 0; i < gaussianParamsList.Count; i++)
+            {
+                textList.Add("amplitude" + i + "[" + gaussianParamsList[i].Amplitude + "]");
+                textList.Add("center" + i + "[" + gaussianParamsList[i].Center + "]");
+                textList.Add("sd" + i + "[" + gaussianParamsList[i].SD + "]");
+            }
+
+            SaveFileDialog save = new SaveFileDialog();
+            save.FileName = "Fit_Profile.txt";
+            save.Filter = "Text File | *.txt";
+            if ((bool)save.ShowDialog());
+            {
+                string f = save.FileName;
+                StreamWriter writer = new StreamWriter(save.OpenFile());
+                for (int i = 0; i < textList.Count; i++)
+                {
+                    writer.WriteLine(textList[i].ToString());
+                }
+                writer.Dispose();
+                writer.Close();
+            }
+        }
+
+        private void ImportFit(object sender, RoutedEventArgs e)
+        {
+            gaussianParamsList = new List<GaussianParams>();
+            try {
+                OpenFileDialog openFileDialog = new OpenFileDialog(); //Open File viewer
+                Nullable<bool> result = openFileDialog.ShowDialog();
+
+                if (result == true)
+                {
+                    string pattern = @"(?<=\[).*(?=\])";
+                    Regex rg = new Regex(pattern);
+                    
+                    
+                    IEnumerable<string> temp = File.ReadLines(openFileDialog.FileName);
+                    List<string> f = new List<string>(temp);
+                    if (f[0] == "[CONFIG]")
+                    { 
+                        fitParams = new FitParams(rg.Match(f[1]).ToString(), double.Parse(rg.Match(f[2]).ToString()), double.Parse(rg.Match(f[3]).ToString()));
+                        linearParams = new LinearParams(double.Parse(rg.Match(f[4]).ToString()), double.Parse(rg.Match(f[5]).ToString()));
+                        gaussianParamsList.Add(new GaussianParams(double.Parse(rg.Match(f[6]).ToString()), double.Parse(rg.Match(f[7]).ToString()), double.Parse(rg.Match(f[8]).ToString())));
+                        if (f.Count >= 9)
+                        {
+                            gaussianParamsList.Add(new GaussianParams(double.Parse(rg.Match(f[9]).ToString()), double.Parse(rg.Match(f[10]).ToString()), double.Parse(rg.Match(f[11]).ToString())));
+
+                            if (f.Count > 12)
+                            {
+                                gaussianParamsList.Add(new GaussianParams(double.Parse(rg.Match(f[12]).ToString()), double.Parse(rg.Match(f[13]).ToString()), double.Parse(rg.Match(f[14]).ToString())));
+                            }
+                        }
+                    }
+                    else 
+                    {
+                        throw new Exception("Unsupported File");
+                    }
+                    XDisplayRamanShift(true);
+                    FitConditions();
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Unsupported File.");
+            }
+        }
+
+        private void Conditions_View(object sender, RoutedEventArgs e)
+        {
+            Conditions.Visibility = Visibility.Visible;
+            Results.Visibility = Visibility.Collapsed;
+        }
+
+        private void Results_View(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (curveFit.gaussianFit.Count != 0)
+                {
+                    Results.Visibility = Visibility.Visible;
+                    Conditions.Visibility = Visibility.Collapsed;
+                    Gaus_One_Check.Visibility = Visibility.Collapsed;
+                    Gaus_Two_Check.Visibility = Visibility.Collapsed;
+                    Gaus_Three_Check.Visibility = Visibility.Collapsed;
+                    Integrate_Button.Visibility = Visibility.Collapsed;
+
+                    Slope_results.Text = curveFit.baselineFit.Slope.ToString();
+                    Intercept_results.Text = curveFit.baselineFit.Intercept.ToString();
+
+                    for (int i = 0; i < curveFit.gaussianFit.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            Gaussian_results_two.Visibility = Visibility.Collapsed;
+                            Gaussian_results_three.Visibility = Visibility.Collapsed;
+                            Amplitude_results.Text = curveFit.gaussianFit[i].Amplitude.ToString();
+                            μ_results.Text = curveFit.gaussianFit[i].Center.ToString();
+                            σ_results.Text = curveFit.gaussianFit[i].SD.ToString();
+                        }
+                        if (i == 1)
+                        {
+                            Gaussian_results_two.Visibility = Visibility.Visible;
+                            Gaussian_results_three.Visibility = Visibility.Collapsed;
+                            amplitude_results_two.Text = curveFit.gaussianFit[i].Amplitude.ToString();
+                            μ_results_two.Text = curveFit.gaussianFit[i].Center.ToString();
+                            σ_results_two.Text = curveFit.gaussianFit[i].SD.ToString();
+                        }
+                        if (i == 2)
+                        {
+                            Gaussian_results_two.Visibility = Visibility.Visible;
+                            Gaussian_results_three.Visibility = Visibility.Visible;
+                            amplitude_results_three.Text = curveFit.gaussianFit[i].Amplitude.ToString();
+                            μ_results_three.Text = curveFit.gaussianFit[i].Center.ToString();
+                            σ_results_three.Text = curveFit.gaussianFit[i].SD.ToString();
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No results to display.");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("No results to display.");
+            } 
+        }
+
+        private void CalculatePeakAreaRatio(object sender, RoutedEventArgs e)
+        {
+            Peak_Area_Ratio_Button.Visibility = Visibility.Collapsed;
+            Integrate_Button.Visibility = Visibility.Visible;
+            if(fitParams.Fit == "Single")
+            {
+                Gaus_One_Check.Visibility = Visibility.Visible;
+                Gaus_Two_Check.Visibility = Visibility.Collapsed;
+                Gaus_Three_Check.Visibility = Visibility.Collapsed;
+            }
+            if (fitParams.Fit == "Double")
+            {
+                Gaus_One_Check.Visibility = Visibility.Visible;
+                Gaus_Two_Check.Visibility = Visibility.Visible;
+                Gaus_Three_Check.Visibility = Visibility.Collapsed;
+            }
+            if (fitParams.Fit == "Triple")
+            {
+                Gaus_One_Check.Visibility = Visibility.Visible;
+                Gaus_Two_Check.Visibility = Visibility.Visible;
+                Gaus_Three_Check.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(, 1, 4, 20);
         }
     }
 }
