@@ -28,6 +28,7 @@ namespace Raman
         public List<GaussianParams> gaussianParamsList = new List<GaussianParams>();
         public RangeConvert range;
         public CurveFit? curveFit;
+        public List<double> areas = new List<double>();
 
         public MainWindow()
         {
@@ -452,9 +453,49 @@ namespace Raman
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private double IntegrateGauss(GaussianParams p)
         {
-            MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(, 1, 4, 20);
+            Integrate integrate = new Integrate(p);
+            double integral = integrate.run();
+            MessageBox.Show(integral.ToString());
+            return integral;
+        }
+        private void Integrate_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)Gaus_One_Check.IsChecked)
+            {
+                double integral = IntegrateGauss(curveFit.gaussianFit[0]);
+                if(areas.Count < 2)
+                {
+                    areas.Add(integral);
+                }
+            }
+            if ((bool)Gaus_Two_Check.IsChecked)
+            {
+                double integral = IntegrateGauss(curveFit.gaussianFit[1]);
+                if (areas.Count < 2)
+                {
+                    areas.Add(integral);
+                }
+            }
+            if ((bool)(Gaus_Three_Check.IsChecked))
+            {
+                double integral = IntegrateGauss(curveFit.gaussianFit[2]);
+                if (areas.Count < 2)
+                {
+                    areas.Add(integral);
+                }
+            }
+            
+            if(areas.Count == 2)
+            {
+                
+            }
+        }
+
+        private void CalculatePeakAreaRatio_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

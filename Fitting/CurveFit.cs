@@ -129,7 +129,7 @@ namespace Raman.Fitting
         {
             double numerator = (x - p.Center) * (x - p.Center);
             double denominator = 2 * (p.SD * p.SD);
-            double output = p.Amplitude * Math.Exp(-numerator / denominator);
+            double output = p.Amplitude * Math.Exp(-numerator / (denominator));
             return output;
         }
 
