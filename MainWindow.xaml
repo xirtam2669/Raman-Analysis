@@ -358,7 +358,6 @@
                         <TextBlock FontSize="15"
                                    Margin="5,0,0,10"
                                    Foreground="#ed9f4b">Gaussian One Params:</TextBlock>
-                        <CheckBox Name="Gaus_One_Check" Margin="5,4,0,0"></CheckBox>
                     </StackPanel>
                     
 
@@ -403,7 +402,6 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,10"
                                        Foreground="#ed9f4b">Gaussian Two Params:</TextBlock>
-                            <CheckBox Name="Gaus_Two_Check" Margin="5,4,0,0"></CheckBox>
                         </StackPanel>
                         
 
@@ -453,7 +451,6 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,10"
                                        Foreground="#ed9f4b">Gaussian Three Params:</TextBlock>
-                            <CheckBox Name="Gaus_Three_Check" Margin="5,4,0,0"></CheckBox>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -502,32 +499,67 @@
                         Background="#ed9f4b" 
                         Height="30"
                         Name="Peak_Area_Ratio_Button">Calculate Peak Area Ratio</Button>
-                
-                <Button BorderBrush="Transparent"
-                        Click="Integrate_Button_Click"
-                        Background="#ed9f4b"
-                        Name="Integrate_Button"
-                        Height="30">Integrate</Button>
-
-                <Button BorderBrush="Transparent"
-                        Click="CalculatePeakAreaRatio_Click"
-                        Background="#ed9f4b"
-                        
-                        Height="30">Calulate Peak Area Ratio</Button>
 
                 <Rectangle Margin="0,10,0,10"
                            Height="1"
                            Fill="white"
                            Stroke="white"
                            HorizontalAlignment="Stretch" />
-                <TextBlock FontSize="15"
-                           Margin="5,0,0,0"
-                           Foreground="#ed9f4b"
-                           HorizontalAlignment="Center">Choose Two Peaks To integrate:</TextBlock>
                 <TextBlock HorizontalAlignment="Center"
                            FontSize="15"
                            Margin="5,0,0,10"
                            Foreground="#ed9f4b">(Peaks numbered from Left to right)</TextBlock>
+
+                <StackPanel Orientation="Horizontal" Name="AreaOne">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Foreground="#ed9f4b">Gaussian One Area:</TextBlock>
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="GaussianOneArea"
+                               Foreground="#ed9f4b">stuff</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Name="AreaTwo">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Foreground="#ed9f4b">Gaussian One Area:</TextBlock>
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="GaussianTwoArea"
+                               Foreground="#ed9f4b">stuff</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Name="AreaThree">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Foreground="#ed9f4b">Gaussian One Area:</TextBlock>
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="GaussianThreeArea"
+                               Foreground="#ed9f4b">stuff</TextBlock>
+                </StackPanel>
+
+                <Rectangle Margin="0,10,0,10"
+                           Height="1"
+                           Fill="white"
+                           Stroke="white"
+                           HorizontalAlignment="Stretch" />
+                <StackPanel Name="Ratios">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="RatiosDisplay"
+                               Foreground="#ed9f4b"></TextBlock>
+                </StackPanel>
+                
+
+
+
             </StackPanel>
         </ScrollViewer>
         

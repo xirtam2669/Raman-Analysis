@@ -22,6 +22,7 @@ namespace Raman
     /// </summary>
     public partial class MainWindow : Window
     {
+        public App app = ((App)App.Current);
         public CsvData csvData; //stores pixel, raman shift, intensity
         public FitParams? fitParams;
         public LinearParams linearParams;
@@ -29,10 +30,12 @@ namespace Raman
         public RangeConvert range;
         public CurveFit? curveFit;
         public List<double> areas = new List<double>();
+        public List<double> ratios = new List<double>();
 
         public MainWindow()
         {
             InitializeComponent();
+            
             Conditions.Visibility = Visibility.Collapsed; 
             Results.Visibility = Visibility.Collapsed;
             DoubleGaus.Visibility = Visibility.Collapsed;
@@ -378,14 +381,13 @@ namespace Raman
         {
             try
             {
+                AreaOne.Visibility = Visibility.Collapsed;
+                AreaTwo.Visibility = Visibility.Collapsed;
+                AreaThree.Visibility = Visibility.Collapsed;
                 if (curveFit.gaussianFit.Count != 0)
                 {
                     Results.Visibility = Visibility.Visible;
-                    Conditions.Visibility = Visibility.Collapsed;
-                    Gaus_One_Check.Visibility = Visibility.Collapsed;
-                    Gaus_Two_Check.Visibility = Visibility.Collapsed;
-                    Gaus_Three_Check.Visibility = Visibility.Collapsed;
-                    Integrate_Button.Visibility = Visibility.Collapsed;
+                    Conditions.Visibility = Visibility.Collapsed;                   
 
                     Slope_results.Text = curveFit.baselineFit.Slope.ToString();
                     Intercept_results.Text = curveFit.baselineFit.Intercept.ToString();
@@ -431,25 +433,79 @@ namespace Raman
 
         private void CalculatePeakAreaRatio(object sender, RoutedEventArgs e)
         {
-            Peak_Area_Ratio_Button.Visibility = Visibility.Collapsed;
-            Integrate_Button.Visibility = Visibility.Visible;
-            if(fitParams.Fit == "Single")
+            /*
+                Ratios #0 = 1/2 or 2/1
+                Ratios #1 = 2/3 or 3/2
+                Ratios #2 = 1/3 or 3/1
+             */
+
+
+            areas.Clear();
+            if(curveFit.gaussianFit.Count == 1)
             {
-                Gaus_One_Check.Visibility = Visibility.Visible;
-                Gaus_Two_Check.Visibility = Visibility.Collapsed;
-                Gaus_Three_Check.Visibility = Visibility.Collapsed;
+                AreaOne.Visibility = Visibility.Visible;
+                areas.Add(IntegrateGauss(curveFit.gaussianFit[0]));
+                GaussianOneArea.Text = areas[0].ToString("0.00");
+                Ratios.Visibility = Visibility.Visible;
+                RatiosDisplay.Text = "Ratios: None";
             }
-            if (fitParams.Fit == "Double")
+            if(curveFit.gaussianFit.Count == 2)
             {
-                Gaus_One_Check.Visibility = Visibility.Visible;
-                Gaus_Two_Check.Visibility = Visibility.Visible;
-                Gaus_Three_Check.Visibility = Visibility.Collapsed;
+                AreaOne.Visibility = Visibility.Visible;
+                AreaTwo.Visibility = Visibility.Visible;
+                areas.Add(IntegrateGauss(curveFit.gaussianFit[0]));
+                areas.Add(IntegrateGauss(curveFit.gaussianFit[1]));
+                GaussianOneArea.Text = areas[0].ToString("0.00");
+                GaussianTwoArea.Text = areas[1].ToString("0.00");
+                Ratios.Visibility = Visibility.Visible;
+                RatiosDisplay.Text = "Ratios:";
+
+                if (areas[0] > areas[1])
+                {
+                    ratios.Add(areas[0] / areas[1]);
+                }
+                else
+                {
+                    ratios.Add(areas[1] / areas[0]);
+                }
             }
-            if (fitParams.Fit == "Triple")
+            if(curveFit.gaussianFit.Count == 3)
             {
-                Gaus_One_Check.Visibility = Visibility.Visible;
-                Gaus_Two_Check.Visibility = Visibility.Visible;
-                Gaus_Three_Check.Visibility = Visibility.Visible;
+                AreaOne.Visibility = Visibility.Visible;
+                AreaTwo.Visibility = Visibility.Visible;
+                AreaThree.Visibility = Visibility.Visible;
+                areas.Add(IntegrateGauss(curveFit.gaussianFit[0]));
+                areas.Add(IntegrateGauss(curveFit.gaussianFit[1]));
+                areas.Add(IntegrateGauss(curveFit.gaussianFit[2]));
+                GaussianOneArea.Text = areas[0].ToString("0.00");
+                GaussianTwoArea.Text = areas[1].ToString("0.00");
+                GaussianThreeArea.Text = areas[2].ToString("0.00");
+                Ratios.Visibility = Visibility.Visible;
+                RatiosDisplay.Text = "Ratios:";
+                if (areas[0] > areas[1])
+                {
+                    ratios.Add(areas[0] / areas[1]);
+                }
+                else
+                {
+                    ratios.Add(areas[1] / areas[0]);
+                }
+                if (areas[1] > areas[2])
+                {
+                    ratios.Add(areas[1] / areas[2]);
+                }
+                else
+                {
+                    ratios.Add(areas[2] / areas[1]);
+                }
+                if (areas[3] > areas[1])
+                {
+                    ratios.Add(areas[3] / areas[1]);
+                }
+                else
+                {
+                    ratios.Add(areas[1] / areas[3]);
+                }
             }
         }
 
@@ -459,43 +515,6 @@ namespace Raman
             double integral = integrate.run();
             MessageBox.Show(integral.ToString());
             return integral;
-        }
-        private void Integrate_Button_Click(object sender, RoutedEventArgs e)
-        {
-            if ((bool)Gaus_One_Check.IsChecked)
-            {
-                double integral = IntegrateGauss(curveFit.gaussianFit[0]);
-                if(areas.Count < 2)
-                {
-                    areas.Add(integral);
-                }
-            }
-            if ((bool)Gaus_Two_Check.IsChecked)
-            {
-                double integral = IntegrateGauss(curveFit.gaussianFit[1]);
-                if (areas.Count < 2)
-                {
-                    areas.Add(integral);
-                }
-            }
-            if ((bool)(Gaus_Three_Check.IsChecked))
-            {
-                double integral = IntegrateGauss(curveFit.gaussianFit[2]);
-                if (areas.Count < 2)
-                {
-                    areas.Add(integral);
-                }
-            }
-            
-            if(areas.Count == 2)
-            {
-                
-            }
-        }
-
-        private void CalculatePeakAreaRatio_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

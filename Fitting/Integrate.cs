@@ -27,7 +27,6 @@ namespace Raman.Fitting
 
         public double run()
         {
-
             //double integral = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => (Amplitude * Math.Exp(-((x - Center) * (x - Center)) / (2 * (SD * SD)))),
             //                                                          Center - (10 * SD / 2), Center + (10 * SD / 2), 100);
 
