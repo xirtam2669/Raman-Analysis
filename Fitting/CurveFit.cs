@@ -56,8 +56,8 @@ namespace Raman.Fitting
             gaussianFit = new List<GaussianParams>();
         }
 
-        public static double[] Fit(double[] x, double[] raw_y, LinearParams baselineInitialConditions, List<GaussianParams> gaussianInitialConditionsList)
-        {
+        public static double[] Fit(double[] x, double[] raw_y, LinearParams baselineInitialConditions, List<GaussianParams> gaussianInitialConditionsList, List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions, bool boundaryFlag)
+        {        
             double epsx = 0.000001;
             int maxits = 0;
             int info;
@@ -70,12 +70,32 @@ namespace Raman.Fitting
             {
                 xx[i, 0] = x[i];
             }
-            double[] c = GenCoefficientArrayFromCompositeParams(baselineInitialConditions, gaussianInitialConditionsList);
+            double[] c = GenCoefficientArrayFromCompositeParams(baselineInitialConditions, gaussianInitialConditionsList);                     
 
-            alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
-            alglib.lsfitsetcond(state, epsx, maxits);
-            alglib.lsfitfit(state, FitFunc, null, null);
-            alglib.lsfitresults(state, out info, out c, out rep);
+                double[] bndu = GenBndu(boundaryConditionsList, linearBoundaryConditions);
+                double[] bndl = GenBndl(boundaryConditionsList, linearBoundaryConditions);
+
+            // for (int i = 0; i < c.Length; i++)
+            // {
+            //     bndu[i] = c[i] + Math.Abs(c[i]) * .1;
+            //     bndl[i] = c[i] - Math.Abs(c[i]) * .1; 
+            // }
+
+            if (boundaryFlag == true)
+            {
+                alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
+                alglib.lsfitsetcond(state, epsx, maxits);
+                alglib.lsfitsetbc(state, bndl, bndu);
+                alglib.lsfitfit(state, FitFunc, null, null);
+                alglib.lsfitresults(state, out info, out c, out rep);
+            }
+            else
+            {
+                alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
+                alglib.lsfitsetcond(state, epsx, maxits);
+                alglib.lsfitfit(state, FitFunc, null, null);
+                alglib.lsfitresults(state, out info, out c, out rep);
+            }
 
             if (info != 2)
             {
@@ -83,8 +103,46 @@ namespace Raman.Fitting
             }
             //fitted coefs
             return c;
-
         }
+
+        private static double[] GenBndu(List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions)
+        { 
+            int count = 0;
+            List<double> bndu_temp = new List<double>();
+            for (int i = 0; i < boundaryConditionsList.Count; i++)
+            {
+                if(i == 0)
+                {
+                    bndu_temp.Add(linearBoundaryConditions.sloper_upper);
+                    bndu_temp.Add(linearBoundaryConditions.intercept_upper);
+                }
+                bndu_temp.Add(boundaryConditionsList[i].amplitude_upper);
+                bndu_temp.Add(boundaryConditionsList[i].center_upper);
+                bndu_temp.Add(boundaryConditionsList[i].sd_upper);
+            }
+            double[] bndu = bndu_temp.ToArray();
+            return bndu;
+        }
+
+        private static double[] GenBndl(List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions)
+        {
+            int count = 0;
+            List<double> bndu_temp = new List<double>();
+            for (int i = 0; i < boundaryConditionsList.Count; i++)
+            {
+                if (i == 0)
+                {
+                    bndu_temp.Add(linearBoundaryConditions.sloper_lower);
+                    bndu_temp.Add(linearBoundaryConditions.intercept_lower);
+                }
+                bndu_temp.Add(boundaryConditionsList[i].amplitude_lower);
+                bndu_temp.Add(boundaryConditionsList[i].center_lower);
+                bndu_temp.Add(boundaryConditionsList[i].sd_lower);
+            }
+            double[] bndu = bndu_temp.ToArray();
+            return bndu;
+        }
+
         private string RMSError(LinearParams linearParams, List<GaussianParams> gaussianParams, double[]x, double[]y)
         {
             double z, square, sum_squares = 0, mean, root, y_calculated;
@@ -109,9 +167,9 @@ namespace Raman.Fitting
             
         }
         
-        public string RunFit(LinearParams paramsLinearBaselineInitialConditions, List<GaussianParams> paramsGaussianListInitalCondtions, double[] ramanshift, double[] intensity)
+        public string RunFit(LinearParams paramsLinearBaselineInitialConditions, List<GaussianParams> paramsGaussianListInitalCondtions, List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions, double[] ramanshift, double[] intensity, bool boundaryFlag)
         {
-            double[] cFitted = Fit(ramanshift, intensity, paramsLinearBaselineInitialConditions, paramsGaussianListInitalCondtions);
+            double[] cFitted = Fit(ramanshift, intensity, paramsLinearBaselineInitialConditions, paramsGaussianListInitalCondtions, boundaryConditionsList, linearBoundaryConditions, boundaryFlag);
             baselineFit = new LinearParams(cFitted[0], cFitted[1]);
 
             for (int i = 2; i < cFitted.Length; i += 3)
@@ -159,8 +217,7 @@ namespace Raman.Fitting
             int count = 0;
 
             for (int i = 2; i < c.Length; i = i + 3)
-            {
-                
+            {                
                 try
                 {
                     c[i] = paramsGaussianList[count].Amplitude;
@@ -171,8 +228,7 @@ namespace Raman.Fitting
                 catch
                 {
                     return c;
-                }
-                
+                }                
             }
             return c;
         }

@@ -20,15 +20,18 @@ namespace Raman
     /// </summary>
     public partial class FitPopup : Window
     {
+        public App app = ((App)App.Current);
         string fit = "Single";
         string min;
         string max;
         public FitParams fitparams;
-        
-        public FitPopup()
+        private MainWindow mainWindow;
+
+        public FitPopup(MainWindow mainWindow)
         {
             InitializeComponent();
             FitMenu.Header = "Single Gaussian";
+            this.mainWindow = mainWindow;
         }
         private void SingleGaussianOnClick(object sender, RoutedEventArgs e)
         {
@@ -60,6 +63,8 @@ namespace Raman
                 double min_double = Convert.ToDouble(min);
                 double max_double = Convert.ToDouble(max);
                 this.fitparams = new FitParams(fit, min_double, max_double);
+                app.model.gaussianParamsList = new List<GaussianParams>(); //clear gaussian
+                mainWindow.FitConditions();
                 this.Close();
             }
             catch (Exception ex)

@@ -7,6 +7,6 @@ namespace Raman
     /// </summary>
     public partial class App : Application
     {
-        public Global model;
+        public Global model = new Global();
     }
 }
