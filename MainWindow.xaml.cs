@@ -27,16 +27,6 @@ namespace Raman
     {
 
         public App app = ((App)App.Current);
-        /*
-        public CsvData csvData; //stores pixel, raman shift, intensity
-        public FitParams? fitParams;
-        public LinearParams linearParams;
-        public List<GaussianParams> gaussianParamsList = new List<GaussianParams>(); 
-        public RangeConvert range;
-        public CurveFit? curveFit;
-        public List<double> areas = new List<double>();
-        public List<double> ratios = new List<double>();
-        */
         public MainWindow()
         {
             InitializeComponent();

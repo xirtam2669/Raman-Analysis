@@ -25,7 +25,7 @@ class ReadCSV
             string x = item.D;
             string y = item.H;
 
-            if (String.IsNullOrWhiteSpace(item.D) || x.Contains("Raman Shift"))
+            if (String.IsNullOrWhiteSpace(item.D) || x.Contains("Raman Shift") || x.Contains(" Dark Subtracted (Processed)"))
             {
                 continue;
             }
