@@ -39,7 +39,7 @@
                               Click="CurveFitWithoutBoundariesOnClick">
                     </MenuItem>
                     <MenuItem Header="Fit Options"
-                              Click="FitOnClick">
+                              Click="FitOptionsOnClick">
                     </MenuItem>
                     <MenuItem Header="Import Fit Profile"
                               Click="ImportFit">
@@ -264,7 +264,7 @@
                                 Margin="0,10,0,0"
                                 Grid.Column="2">
                         <TextBlock FontSize="15"
-                                   Foreground="#ed9f4b">Gaussian Inital Conditions2:</TextBlock>
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 2:</TextBlock>
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Amplitude</TextBlock>
@@ -293,7 +293,7 @@
                                 Margin="0,10,0,0"
                                 Grid.Column="2">
                         <TextBlock FontSize="15"
-                                   Foreground="#ed9f4b">Gaussian Inital Conditions3:</TextBlock>
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 3:</TextBlock>
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Amplitude</TextBlock>
@@ -309,6 +309,89 @@
                                    Foreground="#ed9f4b">σ</TextBlock>
                         <TextBox Margin="0, 0, 30, 0"
                                  Name="σ_three"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                     </StackPanel>
+
+                    <StackPanel Name="Tetra_Gaus"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 4:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_four"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_four"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_four"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Name="Penta_Gaus"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 5:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_five"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_five"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_five"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                    <StackPanel Name="Hexa_Gaus"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 6:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_six"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_six"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_six"></TextBox>
 
                         <Rectangle Margin="0,20,0,0"
                                    Height="1"
@@ -346,7 +429,7 @@
                         <TextBlock Margin="5,0,0,0"
                                    FontSize="15"
                                    Foreground="#ed9f4b"
-                                   Name="Slope_results">123</TextBlock>
+                                   Name="Slope_results"></TextBlock>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
@@ -356,7 +439,7 @@
                         <TextBlock FontSize="15"
                                    Foreground="#ed9f4b"
                                    Margin="5,0,0,0"
-                                   Name="Intercept_results">123</TextBlock>
+                                   Name="Intercept_results"></TextBlock>
                     </StackPanel>
 
 
@@ -380,7 +463,7 @@
                         <TextBlock FontSize="15"
                                    Margin="5,0,0,0"
                                    Foreground="#ed9f4b"
-                                   Name="Amplitude_results">123</TextBlock>
+                                   Name="Amplitude_results"></TextBlock>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
@@ -390,7 +473,7 @@
                         <TextBlock FontSize="15"
                                    Margin="5,0,0,0"
                                    Name="μ_results"
-                                   Foreground="#ed9f4b">123</TextBlock>
+                                   Foreground="#ed9f4b"></TextBlock>
 
                     </StackPanel>
 
@@ -401,7 +484,7 @@
                         <TextBlock FontSize="15"
                                    Margin="5,0,0,0"
                                    Name="σ_results"
-                                   Foreground="#ed9f4b">123</TextBlock>
+                                   Foreground="#ed9f4b"></TextBlock>
                     </StackPanel>
 
                     <StackPanel Name="Gaussian_results_two">
@@ -424,7 +507,7 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,0"
                                        Foreground="#ed9f4b"
-                                       Name="amplitude_results_two">123</TextBlock>
+                                       Name="amplitude_results_two"></TextBlock>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -434,7 +517,7 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,0"
                                        Name="μ_results_two"
-                                       Foreground="#ed9f4b">123</TextBlock>
+                                       Foreground="#ed9f4b"></TextBlock>
 
                         </StackPanel>
 
@@ -445,7 +528,7 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,0"
                                        Name="σ_results_two"
-                                       Foreground="#ed9f4b">123</TextBlock>
+                                       Foreground="#ed9f4b"></TextBlock>
                         </StackPanel>
 
 
@@ -472,7 +555,7 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,0"
                                        Foreground="#ed9f4b"
-                                       Name="amplitude_results_three">123</TextBlock>
+                                       Name="amplitude_results_three"></TextBlock>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -482,7 +565,7 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,0"
                                        Name="μ_results_three"
-                                       Foreground="#ed9f4b">123</TextBlock>
+                                       Foreground="#ed9f4b"></TextBlock>
 
                         </StackPanel>
 
@@ -493,10 +576,147 @@
                             <TextBlock FontSize="15"
                                        Margin="5,0,0,0"
                                        Name="σ_results_three"
-                                       Foreground="#ed9f4b">123</TextBlock>
+                                       Foreground="#ed9f4b"></TextBlock>
                         </StackPanel>
 
 
+
+                        <Rectangle Margin="0,10,0,10"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Name="Gaussian_results_four">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,10"
+                                       Foreground="#ed9f4b">Gaussian Four Params:</TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">Amplitude:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b"
+                                       Name="amplitude_results_four"></TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">μ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="μ_results_four"
+                                       Foreground="#ed9f4b"></TextBlock>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">σ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="σ_results_four"
+                                       Foreground="#ed9f4b"></TextBlock>
+                        </StackPanel>
+
+
+
+                        <Rectangle Margin="0,10,0,10"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Name="Gaussian_results_five">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,10"
+                                       Foreground="#ed9f4b">Gaussian Five Params:</TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">Amplitude:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b"
+                                       Name="amplitude_results_five"></TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">μ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="μ_results_five"
+                                       Foreground="#ed9f4b"></TextBlock>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">σ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="σ_results_five"
+                                       Foreground="#ed9f4b"></TextBlock>
+                        </StackPanel>
+
+                        <Rectangle Margin="0,10,0,10"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Name="Gaussian_results_six">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,10"
+                                       Foreground="#ed9f4b">Gaussian Six Params:</TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">Amplitude:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b"
+                                       Name="amplitude_results_six"></TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">μ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="μ_results_six"
+                                       Foreground="#ed9f4b"></TextBlock>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Foreground="#ed9f4b">σ:</TextBlock>
+                            <TextBlock FontSize="15"
+                                       Margin="5,0,0,0"
+                                       Name="σ_results_six"
+                                       Foreground="#ed9f4b"></TextBlock>
+                        </StackPanel>
 
                         <Rectangle Margin="0,10,0,10"
                                    Height="1"
@@ -510,7 +730,7 @@
                         Click="CalculatePeakAreaRatio" 
                         Background="#ed9f4b" 
                         Height="30"
-                        Name="Peak_Area_Ratio_Button">Calculate Peak Area Ratio</Button>
+                        Name="Peak_Area_Ratio_Button">Calculate Peak Area</Button>
 
                 <Rectangle Margin="0,10,0,10"
                            Height="1"
@@ -555,6 +775,42 @@
                                FontSize="15"
                                Margin="5,0,0,10"
                                Name="GaussianThreeArea"
+                               Foreground="#ed9f4b"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Name="AreaFour">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Foreground="#ed9f4b">Gaussian Four Area:</TextBlock>
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="GaussianFourArea"
+                               Foreground="#ed9f4b"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Name="AreaFive">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Foreground="#ed9f4b">Gaussian Five Area:</TextBlock>
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="GaussianFiveArea"
+                               Foreground="#ed9f4b"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Name="AreaSix">
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Foreground="#ed9f4b">Gaussian Six Area:</TextBlock>
+                    <TextBlock HorizontalAlignment="Left"
+                               FontSize="15"
+                               Margin="5,0,0,10"
+                               Name="GaussianSixArea"
                                Foreground="#ed9f4b"></TextBlock>
                 </StackPanel>
 
@@ -630,6 +886,13 @@
                         <TextBlock FontSize="15"
                                    Margin="0,0,0,0"
                                    Foreground="#ed9f4b">Baseline Boundaries:</TextBlock>
+
+                        <Button Height="20"
+                                Margin="0,20,10,15"
+                                Click="AutoBoundarySet"
+                                Background="#ed9f4b">Auto Boundary Set</Button>
+
+
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Slope Upper</TextBlock>
@@ -707,7 +970,7 @@
                                 Margin="0,10,0,0"
                                 Grid.Column="2">
                         <TextBlock FontSize="15"
-                                   Foreground="#ed9f4b">Gaussian Inital Conditions2:</TextBlock>
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 2:</TextBlock>
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Amplitude Upper</TextBlock>
@@ -755,7 +1018,7 @@
                                 Margin="0,10,0,0"
                                 Grid.Column="2">
                         <TextBlock FontSize="15"
-                                   Foreground="#ed9f4b">Gaussian Inital Conditions3:</TextBlock>
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 3:</TextBlock>
                         <TextBlock Margin="0, 10, 0, 0"
                                    FontSize="15"
                                    Foreground="#ed9f4b">Amplitude Upper</TextBlock>
@@ -793,6 +1056,137 @@
                                    Stroke="white"
                                    HorizontalAlignment="Stretch" />
                     </StackPanel>
+                    
+                    <StackPanel Name="Tetra_Gaus_Boundary"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 4:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_four_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_four_lower"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_four_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_four_lower"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_four_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_four_lower"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Name="Penta_Gaus_Boundary"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 5:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_five_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_five_lower"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_five_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_five_lower"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_five_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_five_lower"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Name="Hexa_Gaus_Boundary"
+                                Margin="0,10,0,0"
+                                Grid.Column="2">
+                        <TextBlock FontSize="15"
+                                   Foreground="#ed9f4b">Gaussian Inital Conditions 6:</TextBlock>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_six_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">Amplitude Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="Amplitude_six_lower"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_six_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">μ Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="μ_six_lower"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ Upper</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_six_upper"></TextBox>
+                        <TextBlock Margin="0, 10, 0, 0"
+                                   FontSize="15"
+                                   Foreground="#ed9f4b">σ Lower</TextBlock>
+                        <TextBox Margin="0, 0, 30, 0"
+                                 Name="σ_six_lower"></TextBox>
+
+                        <Rectangle Margin="0,20,0,0"
+                                   Height="1"
+                                   Fill="white"
+                                   Stroke="white"
+                                   HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+
                     <Button Height="20"
                             Margin="0,20,10,15"
                             Click="SaveFitProfileOnClick"

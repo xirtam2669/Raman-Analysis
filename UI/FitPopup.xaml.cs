@@ -49,6 +49,21 @@ namespace Raman
             this.fit = "Triple";
             FitMenu.Header = "Triple Gaussian";
         }
+        private void TetraGaussianOnClick(object sender, RoutedEventArgs e)
+        {
+            this.fit = "Tetra";
+            FitMenu.Header = "Tetra Gaussian";
+        }
+        private void PentaGaussianOnClick(object sender, RoutedEventArgs e)
+        {
+            this.fit = "Penta";
+            FitMenu.Header = "Penta Gaussian";
+        }
+        private void HexaGaussianOnClick(object sender, RoutedEventArgs e)
+        {
+            this.fit = "Hexa";
+            FitMenu.Header = "Hexa Gaussian";
+        }
 
         private void CancelOnClick(object sender, RoutedEventArgs e)
         {

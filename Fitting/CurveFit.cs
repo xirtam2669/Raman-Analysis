@@ -23,13 +23,13 @@ namespace Raman.Fitting
         //σ == width
         //μ == center
 
-        public double[] pixels;
+        public double[] pixels; //X axis
 
-        public double[] intensity;
+        public double[] intensity; //Y Axis
 
-        public double[] ramanShift;
+        public double[] ramanShift; //X axis
 
-        public LinearParams baslineInitalConditions;
+        public LinearParams baslineInitalConditions; //
 
         public GaussianParams gaussianInitialConditions;
 
@@ -72,8 +72,8 @@ namespace Raman.Fitting
             }
             double[] c = GenCoefficientArrayFromCompositeParams(baselineInitialConditions, gaussianInitialConditionsList);                     
 
-                double[] bndu = GenBndu(boundaryConditionsList, linearBoundaryConditions);
-                double[] bndl = GenBndl(boundaryConditionsList, linearBoundaryConditions);
+                double[] bndu = GenBndu(boundaryConditionsList, linearBoundaryConditions); //Lower Boundary Conditions
+                double[] bndl = GenBndl(boundaryConditionsList, linearBoundaryConditions); //Upper Boundary Conditions
 
             // for (int i = 0; i < c.Length; i++)
             // {
@@ -81,7 +81,7 @@ namespace Raman.Fitting
             //     bndl[i] = c[i] - Math.Abs(c[i]) * .1; 
             // }
 
-            if (boundaryFlag == true)
+            if (boundaryFlag == true) 
             {
                 alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
                 alglib.lsfitsetcond(state, epsx, maxits);
@@ -210,17 +210,17 @@ namespace Raman.Fitting
 
         public static double[] GenCoefficientArrayFromCompositeParams(LinearParams paramsBaseline, List<GaussianParams> paramsGaussianList)
         {
-            double[] c = new double[2 + 3 * paramsGaussianList.Count];
+            double[] c = new double[2 + 3 * paramsGaussianList.Count]; //array of parameters
 
-            c[0] = paramsBaseline.Slope;
-            c[1] = paramsBaseline.Intercept;
+            c[0] = paramsBaseline.Slope; //Slope
+            c[1] = paramsBaseline.Intercept; //intercept
             int count = 0;
 
-            for (int i = 2; i < c.Length; i = i + 3)
+            for (int i = 2; i < c.Length; i = i + 3) //increment by three, as after slope and intercept there are groups of three parameters for each peak
             {                
                 try
                 {
-                    c[i] = paramsGaussianList[count].Amplitude;
+                    c[i] = paramsGaussianList[count].Amplitude; 
                     c[i + 1] = paramsGaussianList[count].Center;
                     c[i + 2] = paramsGaussianList[count].SD;
                     count++;

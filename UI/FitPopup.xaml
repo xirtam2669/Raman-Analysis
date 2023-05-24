@@ -44,6 +44,12 @@
                                       Click="DoubleGaussianOnClick"></MenuItem>
                             <MenuItem Header="Triple Gaussian"
                                       Click="TripleGaussianOnClick"></MenuItem>
+                            <MenuItem Header="Tetra Gaussian"
+                                      Click="TetraGaussianOnClick"></MenuItem>
+                            <MenuItem Header="Penta Gaussian"
+                                      Click="PentaGaussianOnClick"></MenuItem>
+                            <MenuItem Header="Hexa Gaussian"
+                                      Click="HexaGaussianOnClick"></MenuItem>
                         </MenuItem>
                     </Menu>
                 </DockPanel>
