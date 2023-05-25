@@ -70,18 +70,12 @@ namespace Raman.Fitting
             {
                 xx[i, 0] = x[i];
             }
-            double[] c = GenCoefficientArrayFromCompositeParams(baselineInitialConditions, gaussianInitialConditionsList);                     
+            double[] c = GenCoefficientArrayFromCompositeParams(baselineInitialConditions, gaussianInitialConditionsList); //create c array for holding equation parameters                    
 
                 double[] bndu = GenBndu(boundaryConditionsList, linearBoundaryConditions); //Lower Boundary Conditions
                 double[] bndl = GenBndl(boundaryConditionsList, linearBoundaryConditions); //Upper Boundary Conditions
 
-            // for (int i = 0; i < c.Length; i++)
-            // {
-            //     bndu[i] = c[i] + Math.Abs(c[i]) * .1;
-            //     bndl[i] = c[i] - Math.Abs(c[i]) * .1; 
-            // }
-
-            if (boundaryFlag == true) 
+            if (boundaryFlag == true) //curve fit with boundaries
             {
                 alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
                 alglib.lsfitsetcond(state, epsx, maxits);
@@ -89,7 +83,7 @@ namespace Raman.Fitting
                 alglib.lsfitfit(state, FitFunc, null, null);
                 alglib.lsfitresults(state, out info, out c, out rep);
             }
-            else
+            else //curve fit without boundaries
             {
                 alglib.lsfitcreatef(xx, raw_y, c, diffstep, out state);
                 alglib.lsfitsetcond(state, epsx, maxits);
@@ -102,10 +96,10 @@ namespace Raman.Fitting
                 //error
             }
             //fitted coefs
-            return c;
+            return c; //return composite params
         }
 
-        private static double[] GenBndu(List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions)
+        private static double[] GenBndu(List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions) //upper boundary conditions
         { 
             int count = 0;
             List<double> bndu_temp = new List<double>();
@@ -124,7 +118,7 @@ namespace Raman.Fitting
             return bndu;
         }
 
-        private static double[] GenBndl(List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions)
+        private static double[] GenBndl(List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions) //lower boundary conditions
         {
             int count = 0;
             List<double> bndu_temp = new List<double>();
@@ -148,42 +142,42 @@ namespace Raman.Fitting
             double z, square, sum_squares = 0, mean, root, y_calculated;
             for (int i = 0; i < x.Length; i++)
             {
-                y_calculated = Composite(linearParams, gaussianParams, x[i]);
-                z = y_calculated - y[i];
-                square = z * z;
-                sum_squares += square;
+                y_calculated = Composite(linearParams, gaussianParams, x[i]); //Calculate composite function for given x
+                z = y_calculated - y[i]; //subtract composite minus actual y to get the error (z)
+                square = z * z; //square the error
+                sum_squares += square; //add squared error to sum of squared errors
             }
 
-            mean = sum_squares / x.Length;
-            root = Math.Sqrt(mean);
-            if(root < rmsErrorThreshold)
+            mean = sum_squares / x.Length; //divide sum of squared errors by the amount of times the function ran.
+            root = Math.Sqrt(mean); // square root the mean
+            if(root < rmsErrorThreshold) //if the error is below the threshold
             {
-                return root.ToString();
+                return root.ToString(); //successful fit
             }
             else
             {
-                return "Bad fit.";
+                return "Bad fit."; //Error is above threshold
             }
             
         }
         
         public string RunFit(LinearParams paramsLinearBaselineInitialConditions, List<GaussianParams> paramsGaussianListInitalCondtions, List<BoundaryConditions> boundaryConditionsList, LinearBoundaryConditions linearBoundaryConditions, double[] ramanshift, double[] intensity, bool boundaryFlag)
         {
-            double[] cFitted = Fit(ramanshift, intensity, paramsLinearBaselineInitialConditions, paramsGaussianListInitalCondtions, boundaryConditionsList, linearBoundaryConditions, boundaryFlag);
-            baselineFit = new LinearParams(cFitted[0], cFitted[1]);
+            double[] cFitted = Fit(ramanshift, intensity, paramsLinearBaselineInitialConditions, paramsGaussianListInitalCondtions, boundaryConditionsList, linearBoundaryConditions, boundaryFlag); //cFitted is an array of composite function parameters
+            baselineFit = new LinearParams(cFitted[0], cFitted[1]); //linear baseline composite parameters
 
             for (int i = 2; i < cFitted.Length; i += 3)
             {
-                gaussianFit.Add(new GaussianParams(cFitted[i], cFitted[i + 1], cFitted[i + 2]));
+                gaussianFit.Add(new GaussianParams(cFitted[i], cFitted[i + 1], cFitted[i + 2])); //pulling gaussian parameters out of cFitted into a gaussianFit object
             }
 
-            this.error = RMSError(baselineFit, gaussianFit, ramanshift, intensity);
+            this.error = RMSError(baselineFit, gaussianFit, ramanshift, intensity); //calculate squared error 
 
-            this.fitOutput = GenXYFromComposite(baselineFit, gaussianFit, ramanshift);
-            return error;
+            this.fitOutput = GenXYFromComposite(baselineFit, gaussianFit, ramanshift); //execute composite function and collect all output for graphing onto screen
+            return error; //return the error to the UI
         }
 
-        public static double Gaussian(GaussianParams p, double x) //was private static
+        public static double Gaussian(GaussianParams p, double x) //was private static. This function is the gaussian equation.
         {
             double numerator = (x - p.Center) * (x - p.Center);
             double denominator = 2 * (p.SD * p.SD);
@@ -191,21 +185,21 @@ namespace Raman.Fitting
             return output;
         }
 
-        private static double LinearBaseline(LinearParams p, double x)
+        private static double LinearBaseline(LinearParams p, double x) //linear baseline 
         {
             return p.Slope * x + p.Intercept;
         }
 
-        private static double Composite(LinearParams paramsBaseline, List<GaussianParams> paramsaGaussianList, double x)
+        private static double Composite(LinearParams paramsBaseline, List<GaussianParams> paramsaGaussianList, double x) //composite function
         {
-            double r = LinearBaseline(paramsBaseline, x);
+            double r = LinearBaseline(paramsBaseline, x); //calculates linear baseline
 
             foreach (GaussianParams paramsGuassian in paramsaGaussianList)
             {
-                double gaus = Gaussian(paramsGuassian, x);
-                r += gaus;
+                double gaus = Gaussian(paramsGuassian, x); //calculate gaussian
+                r += gaus; //add linear baseline to gaussian to create composite function
             }
-            return r;
+            return r; //return output
         }
 
         public static double[] GenCoefficientArrayFromCompositeParams(LinearParams paramsBaseline, List<GaussianParams> paramsGaussianList)
@@ -235,21 +229,21 @@ namespace Raman.Fitting
 
         public static void FitFunc(double[] c, double[] x, ref double func, object obj)
         {
-            LinearParams paramsBaseline = new LinearParams(c[0], c[1]);
-            List<GaussianParams> paramsGaussianList = new List<GaussianParams>();
+            LinearParams paramsBaseline = new LinearParams(c[0], c[1]); //linear baseline
+            List<GaussianParams> paramsGaussianList = new List<GaussianParams>(); 
 
-            for (int i = 2; i < c.Length; i += 3)
+            for (int i = 2; i < c.Length; i += 3) //adding each set of gaussian parameters to C
             {
-                paramsGaussianList.Add(new GaussianParams(c[i], c[i + 1], c[i + 2]));
+                paramsGaussianList.Add(new GaussianParams(c[i], c[i + 1], c[i + 2])); 
             }
-            func = Composite(paramsBaseline, paramsGaussianList, x[0]);
+            func = Composite(paramsBaseline, paramsGaussianList, x[0]); //execute composite function
         }
         public double[] GenXYFromComposite(LinearParams paramsBaseline, List<GaussianParams> paramsGaussianList, double[] x)
         {
-            double[] y = new double[x.Length];
+            double[] y = new double[x.Length]; //create y array
             for (int i = 0; i < x.Length; i++)
             {
-                y[i] = Composite(paramsBaseline, paramsGaussianList, x[i]);
+                y[i] = Composite(paramsBaseline, paramsGaussianList, x[i]); //populate y array with composite function output
             }
             return y;
         }
