@@ -658,9 +658,9 @@ namespace Raman
             try
             {
                 app.model.curveFit = new CurveFit(app.model.range.pixels, app.model.range.intensity, app.model.range.ramanShift, app.model.fitParams);
-                string error = app.model.curveFit.RunFit(app.model.linearParams, app.model.gaussianParamsList, app.model.boundaryConditionsList, app.model.linearBoundaryConditions, app.model.range.ramanShift, app.model.range.intensity, app.model.boundaryFlag);
+                app.model.Error = app.model.curveFit.RunFit(app.model.linearParams, app.model.gaussianParamsList, app.model.boundaryConditionsList, app.model.linearBoundaryConditions, app.model.range.ramanShift, app.model.range.intensity, app.model.boundaryFlag);
 
-                MessageBox.Show(error.ToString(), "Fit least squares error.");
+                MessageBox.Show(app.model.Error.ToString(), "Fit least squares error.");
                 plot.Plot.Clear();
                 plot.Plot.AddScatter(x_coords, y_coords);
                 plot.Plot.AddScatter(app.model.range.ramanShift, app.model.curveFit.fitOutput);
@@ -982,6 +982,40 @@ namespace Raman
             catch
             {
                 MessageBox.Show("No results to display.", "Cannot Proceed");
+            }
+        }
+
+        private void ExportFitCSV(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog save = new SaveFileDialog()
+            {
+                Title = "Fitted Data",
+                Filter = "Go Fuck Yourself (*.csv) | *.csv",
+                FileName = ""
+            };
+
+            if(save.ShowDialog() == true)
+            {
+                using (StreamWriter writer = new StreamWriter(File.Create(save.FileName)))
+                {
+                    writer.WriteLine("Ramanshift,Intensity,Error,Areas,Amplitude,Center,SD");
+                    for (int i = 0; i < app.model.range.ramanShift.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            writer.WriteLine(app.model.range.ramanShift[i].ToString() + "," + app.model.curveFit.fitOutput[i].ToString() + "," + app.model.Error + "," + app.model.areas[i]);
+                        }
+                        if (i != 0 && i < app.model.areas.Count)
+                        {                            
+                            writer.WriteLine(app.model.range.ramanShift[i].ToString() + "," + app.model.curveFit.fitOutput[i].ToString() + ", ," + app.model.areas[i]);
+                        }   
+                        if(i>app.model.areas.Count) 
+                        {
+                            writer.WriteLine(app.model.range.ramanShift[i].ToString() + "," + app.model.curveFit.fitOutput[i].ToString());
+                        }
+                    }
+                    writer.Dispose();
+                }
             }
         }
 

@@ -41,7 +41,7 @@ namespace Raman.Fitting
 
         public double[] fitOutput;
 
-        public double rmsErrorThreshold = 10000;
+        public double rmsErrorThreshold = 500;
 
         public string error;
 
@@ -143,7 +143,7 @@ namespace Raman.Fitting
             for (int i = 0; i < x.Length; i++)
             {
                 y_calculated = Composite(linearParams, gaussianParams, x[i]); //Calculate composite function for given x
-                z = y_calculated - y[i]; //subtract composite minus actual y to get the error (z)
+                z = y_calculated - y[i]; //composite minus actual y to get the error (z)
                 square = z * z; //square the error
                 sum_squares += square; //add squared error to sum of squared errors
             }

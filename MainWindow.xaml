@@ -819,6 +819,11 @@
                            Fill="white"
                            Stroke="white"
                            HorizontalAlignment="Stretch" />
+
+                <Button Height="30"
+                                Click="ExportFitCSV"
+                                Background="#ed9f4b">Export Fit X,Y Data</Button>
+
                 <StackPanel Name="Ratios">
                     <TextBlock HorizontalAlignment="Left"
                                FontSize="15"

@@ -22,6 +22,7 @@ namespace Raman
         public CurveFit? curveFit;
         public List<double> areas = new List<double>();
         public List<double> ratios = new List<double>();
+        public string Error;
 
         public Global()
         {
